@@ -75,7 +75,7 @@ namespace OthelloProject.Models
 				conn.Close();
 			}
 		}
-		
+
 		public UserDetails GetUserInfoByID(int userid, out string message)
 		{
 			message = "";
@@ -98,10 +98,10 @@ namespace OthelloProject.Models
 					ud.Username = reader["Username"].ToString();
 					ud.UserID = (int)reader["UserID"];
 				}
-				
+
 				return ud;
 			}
-			catch(SqlException ex)
+			catch (SqlException ex)
 			{
 				message = ex.Message;
 				return null;
@@ -111,6 +111,112 @@ namespace OthelloProject.Models
 				conn.Close();
 			}
 		}
+
+		public int UpdateUserName(UserDetails selectedUser, out string message)
+		{
+			message = "";
+
+			SqlConnection conn = Connect();
+
+			string sqlQuery = "UPDATE [User] SET [Username] = @Username";
+			SqlCommand cmd = new SqlCommand(sqlQuery, conn);
+
+			cmd.Parameters.AddWithValue("@Username", selectedUser.Username);
+
+			try
+			{
+				conn.Open();
+				int rowsAffected = cmd.ExecuteNonQuery();
+
+				if (rowsAffected != 1)
+				{
+					message = "Error occurred when updating username";
+					return 0;
+				}
+				return rowsAffected;
+			}
+			catch (Exception ex)
+			{
+				message = ex.Message;
+				return 0;
+			}
+			finally
+			{
+				conn.Close();
+			}
+		}
+
+		public int UpdatePassword(UserDetails selectedUser, out string message)
+		{
+			message = "";
+
+			var PasswordHasher = new PasswordHasher<UserDetails>();
+			string hashedPassword = PasswordHasher.HashPassword(selectedUser, selectedUser.Password);
+			selectedUser.Password = hashedPassword;
+
+			SqlConnection conn = Connect();
+
+			string sqlQuery = "UPDATE [User] SET [Password] = @Password";
+			SqlCommand cmd = new SqlCommand(sqlQuery, conn);
+
+			cmd.Parameters.AddWithValue("@Password", selectedUser.Password);
+
+			try
+			{
+				conn.Open();
+				int rowsAffected = cmd.ExecuteNonQuery();
+
+				if (rowsAffected != 1)
+				{
+					message = "Error occurred when updating password";
+					return 0;
+				}
+				return rowsAffected;
+			}
+			catch (Exception ex)
+			{
+				message = ex.Message;
+				return 0;
+			}
+			finally
+			{
+				conn.Close();
+			}
+		}
+		public int UpdateEmail(UserDetails selectedUser, out string message)
+		{
+			message = "";
+
+			SqlConnection conn = Connect();
+
+			string sqlQuery = "UPDATE [User] SET [Email] = @Email";
+			SqlCommand cmd = new SqlCommand(sqlQuery, conn);
+
+			cmd.Parameters.AddWithValue("@Email", selectedUser.Email);
+
+			try
+			{
+				conn.Open();
+				int rowsAffected = cmd.ExecuteNonQuery();
+
+				if (rowsAffected != 1)
+				{
+					message = "Error occurred when updating email";
+					return 0;
+				}
+				return rowsAffected;
+			}
+			catch (Exception ex)
+			{
+				message = ex.Message;
+				return 0;
+			}
+			finally
+			{
+				conn.Close();
+			}
+		}
+
 	}
 
 }
