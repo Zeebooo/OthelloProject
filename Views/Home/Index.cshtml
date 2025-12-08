@@ -1,32 +1,12 @@
-﻿@model OthelloProject.Models.Details.LoginViewModel
-
-@{
-    ViewData["Title"] = "Logga in";
+﻿@{
+    ViewData["Title"] = "Hem";
 }
 
-<h2>Logga in</h2>
-
-<form asp-action="Index" method="post">
-    <div>
-        <label asp-for="Username"></label>
-        <input asp-for="Username" />
-        <span asp-validation-for="Username"></span>
+<div class="text-center">
+    <h1 class="display-5 mb-3">Välkommen till Othello</h1>
+    <p class="lead">Skapa nya användare eller visa befintliga direkt via länkarna nedan.</p>
+    <div class="mt-4">
+        <a class="btn btn-primary me-2" asp-controller="User" asp-action="RegisterUser">Registrera användare</a>
+        <a class="btn btn-outline-secondary" asp-controller="User" asp-action="SelectUser">Visa användare</a>
     </div>
-
-    <div>
-        <label asp-for="Password"></label>
-        <input asp-for="Password" />
-        <span asp-validation-for="Password"></span>
-    </div>
-
-    <button type="submit">Logga in</button>
-</form>
-
-<p>
-    Har du inget konto?
-    <a asp-action="Register">Registrera dig här</a>
-</p>
-
-@section Scripts{
-    <partial name="_ValidationScriptsPartial" />
-}
+</div>

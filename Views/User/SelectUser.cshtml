@@ -1,0 +1,44 @@
+@{
+    ViewData["Title"] = "Användare";
+    var users = Model?.Users as System.Collections.Generic.IEnumerable<dynamic>;
+}
+
+<h2 class="mb-4">Registrerade användare</h2>
+
+@if (!string.IsNullOrWhiteSpace(ViewBag.Message as string))
+{
+    <div class="alert alert-info" role="alert">
+        @ViewBag.Message
+    </div>
+}
+
+@if (users != null)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Användarnamn</th>
+                <th>E-post</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in users)
+            {
+                <tr>
+                    <td>@user.UserID</td>
+                    <td>@user.Username</td>
+                    <td>@user.Email</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-warning" role="alert">
+        Inga användare kunde hämtas.
+    </div>
+}
+
+<a class="btn btn-primary mt-3" asp-action="RegisterUser">Registrera ny användare</a>
