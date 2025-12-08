@@ -30,7 +30,7 @@ namespace OthelloProject.Models
 			SqlCommand cmd = new SqlCommand(sqlQuery, conn);
 
 			cmd.Parameters.AddWithValue("@User1ID", gd.User1ID);
-			cmd.Parameters.AddWithValue("@GameStatus",gd.GameStatus.ToString());
+			cmd.Parameters.AddWithValue("@GameStatus", gd.GameStatus.ToString());
 			cmd.Parameters.AddWithValue("@Board", gd.Board.ToString());
 
 			try
@@ -38,13 +38,13 @@ namespace OthelloProject.Models
 				conn.Open();
 				int rowsAffected = cmd.ExecuteNonQuery();
 				message = "Successfully created a new game";
-				if(rowsAffected != 1)
+				if (rowsAffected != 1)
 				{
 					message = "An error occurred when creating a game";
 				}
 				return rowsAffected;
 			}
-			catch(SqlException ex)
+			catch (SqlException ex)
 			{
 				message = ex.Message;
 				return 0;
@@ -83,7 +83,7 @@ namespace OthelloProject.Models
 				}
 				return gd;
 			}
-			catch(SqlException ex)
+			catch (SqlException ex)
 			{
 				message = ex.Message;
 				return null;
@@ -94,5 +94,106 @@ namespace OthelloProject.Models
 			}
 		}
 
+		public int UpdateUser2ID(GameDetails selectedGame, out string message)
+		{
+			message = "";
+
+			SqlConnection conn = Connect();
+
+			string sqlQuery = "UPDATE [Game] SET [User2ID] = @User2ID WHERE [GameID] = @GameID";
+			SqlCommand cmd = new SqlCommand(sqlQuery, conn);
+
+			cmd.Parameters.AddWithValue("@User2ID", selectedGame.User2ID);
+			cmd.Parameters.AddWithValue("@GameID", selectedGame.GameID);
+
+			try
+			{
+				conn.Open();
+				int rowsAffected = cmd.ExecuteNonQuery();
+				if (rowsAffected != 1)
+				{
+					message = "An error occurred while updating User2ID";
+					return 0;
+				}
+				return rowsAffected;
+			}
+			catch (Exception ex)
+			{
+				message = ex.Message;
+				return 0;
+			}
+			finally
+			{
+				conn.Close();
+			}
+		}
+
+		public int UpdateGameStatus(GameDetails selectedGame, out string message)
+		{
+			message = "";
+
+			SqlConnection conn = Connect();
+
+			string sqlQuery = "UPDATE [Game] SET [GameStatus] = @GameStatus WHERE [GameID] = @GameID";
+			SqlCommand cmd = new SqlCommand(sqlQuery, conn);
+
+			cmd.Parameters.AddWithValue("@GameStatus", selectedGame.GameStatus);
+			cmd.Parameters.AddWithValue("@GameID", selectedGame.GameID);
+
+			try
+			{
+				conn.Open();
+				int rowsAffected = cmd.ExecuteNonQuery();
+				if (rowsAffected != 1)
+				{
+					message = "An error occurred while updating GameStatus";
+					return 0;
+				}
+				return rowsAffected;
+			}
+			catch (Exception ex)
+			{
+				message = ex.Message;
+				return 0;
+			}
+			finally
+			{
+				conn.Close();
+			}
+		}
+
+		public int UpdateGameWinnerID(GameDetails selectedGame, out string message)
+		{
+			message = "";
+
+			SqlConnection conn = Connect();
+
+			string sqlQuery = "UPDATE [Game] SET [WinnerID] = @WinnerID WHERE [GameID] = @GameID";
+			SqlCommand cmd = new SqlCommand(sqlQuery, conn);
+
+			cmd.Parameters.AddWithValue("@WinnerID", selectedGame.WinnerID);
+			cmd.Parameters.AddWithValue("@GameID", selectedGame.GameID);
+
+			try
+			{
+				conn.Open();
+				int rowsAffected = cmd.ExecuteNonQuery();
+				if (rowsAffected != 1)
+				{
+					message = "An error occurred while updating WinnerID";
+					return 0;
+				}
+				return rowsAffected;
+			}
+			catch (Exception ex)
+			{
+				message = ex.Message;
+				return 0;
+			}
+			finally
+			{
+				conn.Close();
+			}
+		}
 	}
 }
