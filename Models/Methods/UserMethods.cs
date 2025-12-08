@@ -217,7 +217,7 @@ namespace OthelloProject.Models
 			}
 		}
 
-		public int DeleteUser (int selectedUserID, out string message)
+		public int DeleteUser(int selectedUserID, out string message)
 		{
 			message = "";
 
@@ -233,14 +233,14 @@ namespace OthelloProject.Models
 				conn.Open();
 				int rowsAffected = cmd.ExecuteNonQuery();
 
-				if(rowsAffected != 1)
+				if (rowsAffected != 1)
 				{
 					message = "An error occurred while removing user";
 					return 0;
 				}
 				return rowsAffected;
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				message = ex.Message;
 				return 0;
