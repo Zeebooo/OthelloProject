@@ -1,0 +1,9 @@
+/Users/isacj/edu/DoW/OthelloProject/obj/Debug/net9.0/rpswa.dswa.cache.json
+/Users/isacj/edu/DoW/OthelloProject/obj/Debug/net9.0/OthelloProject.GeneratedMSBuildEditorConfig.editorconfig
+/Users/isacj/edu/DoW/OthelloProject/obj/Debug/net9.0/OthelloProject.AssemblyInfoInputs.cache
+/Users/isacj/edu/DoW/OthelloProject/obj/Debug/net9.0/OthelloProject.AssemblyInfo.cs
+/Users/isacj/edu/DoW/OthelloProject/obj/Debug/net9.0/OthelloProject.csproj.CoreCompileInputs.cache
+/Users/isacj/edu/DoW/OthelloProject/obj/Debug/net9.0/OthelloProject.MvcApplicationPartsAssemblyInfo.cache
+/Users/isacj/edu/DoW/OthelloProject/obj/Debug/net9.0/OthelloProject.RazorAssemblyInfo.cache
+/Users/isacj/edu/DoW/OthelloProject/obj/Debug/net9.0/OthelloProject.RazorAssemblyInfo.cs
+/Users/isacj/edu/DoW/OthelloProject/obj/Debug/net9.0/OthelloProject.sourcelink.json
