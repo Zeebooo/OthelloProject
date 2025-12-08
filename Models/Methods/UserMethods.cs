@@ -58,17 +58,53 @@ namespace OthelloProject.Models
 					if (ex.Message.Contains("Username"))
 					{
 						message = "Username already exists.";
-						return 0;
+						return -1;
 					}
 					else if (ex.Message.Contains("Email"))
 					{
-						message = "Email already exists.";
-						return 0;
+						message = "Email is already taken.";
+						return -2;
 					}
 				}
 
 				message = "An error occurred while registering the user: " + ex.Message;
 				return 0;
+			}
+			finally
+			{
+				conn.Close();
+			}
+		}
+		
+		public UserDetails GetUserInfoByID(int userid, out string message)
+		{
+			message = "";
+
+			SqlConnection conn = Connect();
+
+			string sqlQuery = "SELECT * FROM [User] WHERE [UserID] = @UserID";
+			SqlCommand cmd = new SqlCommand(sqlQuery, conn);
+
+			cmd.Parameters.AddWithValue("@UserID", System.Data.SqlDbType.Int).Value = userid;
+			UserDetails ud = new UserDetails();
+
+			try
+			{
+				conn.Open();
+				SqlDataReader reader = cmd.ExecuteReader();
+
+				while (reader.Read())
+				{
+					ud.Username = reader["Username"].ToString();
+					ud.UserID = (int)reader["UserID"];
+				}
+				
+				return ud;
+			}
+			catch(SqlException ex)
+			{
+				message = ex.Message;
+				return null;
 			}
 			finally
 			{
