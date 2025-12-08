@@ -1,6 +1,3 @@
-using Microsoft.Extensions.Configuration.UserSecrets;
-using Microsoft.Identity.Client;
-
 namespace OthelloProject.Models.Methods
 {
 	public class UserDetails
