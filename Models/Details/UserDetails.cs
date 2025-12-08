@@ -1,13 +1,14 @@
 using Microsoft.Extensions.Configuration.UserSecrets;
+using Microsoft.Identity.Client;
 
 namespace OthelloProject.Models.Methods
 {
 	public class UserDetails
 	{
 		public UserDetails() { }
-		int UserID { get; set; }
-		string Username { get; set; }
-		string Email { get; set; }
-		string Password { get; set; }
+		public int UserID { get; set; }
+		public string Username { get; set; }
+		public string Email { get; set; }
+		public string Password { get; set; }
 	}
 }
