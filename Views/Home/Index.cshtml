@@ -1,8 +1,32 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model OthelloProject.Models.Details.LoginViewModel
+
+@{
+    ViewData["Title"] = "Logga in";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h2>Logga in</h2>
+
+<form asp-action="Index" method="post">
+    <div>
+        <label asp-for="Username"></label>
+        <input asp-for="Username" />
+        <span asp-validation-for="Username"></span>
+    </div>
+
+    <div>
+        <label asp-for="Password"></label>
+        <input asp-for="Password" />
+        <span asp-validation-for="Password"></span>
+    </div>
+
+    <button type="submit">Logga in</button>
+</form>
+
+<p>
+    Har du inget konto?
+    <a asp-action="Register">Registrera dig här</a>
+</p>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
