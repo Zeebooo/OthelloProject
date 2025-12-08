@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OthelloProject")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c001016ab5364b08e9d2a8945944a0a31f292459")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bdf37453ff5c3324e4f44b654d61f94bd35de933")]
 [assembly: System.Reflection.AssemblyProductAttribute("OthelloProject")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OthelloProject")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
