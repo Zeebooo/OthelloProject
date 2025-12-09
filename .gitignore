@@ -3,3 +3,6 @@
 
 # Ignore obj
 obj/
+
+# Ignore bin
+bin/

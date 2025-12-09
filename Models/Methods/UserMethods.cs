@@ -109,6 +109,50 @@ namespace OthelloProject.Models
 			}
 		}
 
+		public List<UserDetails> GetAllUsers(out string message)
+		{
+			message = "";
+
+			SqlConnection conn = Connect();
+
+			string sqlQuery = "SELECT * FROM [User]";
+			SqlCommand cmd = new SqlCommand(sqlQuery, conn);
+
+			List<UserDetails> udList = new List<UserDetails>();
+
+			try
+			{
+				conn.Open();
+				SqlDataReader reader = cmd.ExecuteReader();
+
+				while (reader.Read())
+				{
+					udList.Add(new UserDetails
+					{
+						UserID = (int)reader["UserID"],
+						Username = reader["Username"].ToString(),
+						Email = reader["Email"].ToString()
+					});
+
+					if (udList.Count() == 0)
+					{
+						message = "No users were found";
+						return null;
+					}
+				}
+				return udList;
+			}
+			catch (Exception ex)
+			{
+				message = ex.Message;
+				return null;
+			}
+			finally
+			{
+				conn.Close();
+			}
+		}
+
 		public int UpdateUserName(UserDetails selectedUser, out string message)
 		{
 			message = "";
@@ -244,7 +288,7 @@ namespace OthelloProject.Models
 					AND [User2ID] NOT IN (SELECT [UserID] FROM [User])";
 
 					SqlCommand cleanupCmd = new SqlCommand(sqlCleanupQuery, conn);
-					cleanupCmd.ExecuteNonQuery();	
+					cleanupCmd.ExecuteNonQuery();
 				}
 
 				return rowsAffected;
