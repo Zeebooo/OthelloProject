@@ -1,0 +1,42 @@
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="text-center mb-4">
+            <h1 class="display-5 mb-3">Logga in</h1>
+            <p class="lead">Ange användarnamn eller e-post och lösenord för att fortsätta.</p>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(ViewBag.Message as string))
+        {
+            <div class="alert alert-info" role="alert">
+                @ViewBag.Message
+            </div>
+        }
+        else if (!string.IsNullOrWhiteSpace(TempData["LoginMessage"] as string))
+        {
+            <div class="alert alert-success" role="alert">
+                @TempData["LoginMessage"]
+            </div>
+        }
+
+        <form asp-controller="User" asp-action="Login" method="post" class="card p-4 shadow-sm">
+            <div class="mb-3">
+                <label class="form-label" for="usernameOrEmail">Användarnamn eller e-post</label>
+                <input class="form-control" id="usernameOrEmail" name="usernameOrEmail" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="password">Lösenord</label>
+                <input class="form-control" type="password" id="password" name="password" required />
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Logga in</button>
+                <a class="btn btn-outline-secondary" asp-controller="User" asp-action="RegisterUser">Registrera</a>
+            </div>
+        </form>
+    </div>
+</div>
