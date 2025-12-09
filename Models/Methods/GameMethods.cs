@@ -25,12 +25,13 @@ namespace OthelloProject.Models
 
 			SqlConnection conn = Connect();
 
-			string sqlQuery = "INSERT INTO [Game] (User1ID, GameStatus, Board) VALUES (@User1ID, @GameStatus, @Board)";
+			string sqlQuery = "INSERT INTO [Game] (User1ID, GameStatus, Board, Name) VALUES (@User1ID, @GameStatus, @Board, @Name)";
 			SqlCommand cmd = new SqlCommand(sqlQuery, conn);
 
 			cmd.Parameters.AddWithValue("@User1ID", gd.User1ID);
 			cmd.Parameters.AddWithValue("@GameStatus", gd.GameStatus.ToString());
 			cmd.Parameters.AddWithValue("@Board", gd.Board.ToString());
+			cmd.Parameters.AddWithValue("@Username", gd.Username.ToString());
 
 			try
 			{
@@ -114,7 +115,8 @@ namespace OthelloProject.Models
 					allGames.Add(new GameDetails
 					{
 						User1ID = (int)reader["User1ID"],
-						GameStatus = reader["Gamestatus"].ToString()
+						GameStatus = reader["Gamestatus"].ToString(),
+						Username = reader["Username"].ToString()
 					});
 				}
 

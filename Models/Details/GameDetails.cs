@@ -10,5 +10,6 @@ namespace OthelloProject.Models.Methods
 		public string GameStatus { get; set; }
 		public string Board { get; set; }
 		public int? WinnerID { get; set; }
+		public string? Username { get; set; }
 	}
 }

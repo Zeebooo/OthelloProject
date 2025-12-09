@@ -1,7 +1,36 @@
-﻿@{
-    ViewData["Title"] = "Inloggad";
+﻿@using Microsoft.IdentityModel.Tokens
+@using OthelloProject.Models.Methods
+@using System.Diagnostics.Eventing.Reader
+@model List<GameDetails>
+
+@{
+	ViewData["Title"] = "Inloggad";
 }
 
-<h2>Du är inloggad</h2>
+<h1>Available games</h1>
 
-<p>Välkommen! Den här sidan kan användas för att visa information efter lyckad inloggning.</p>
+@if (Model.IsNullOrEmpty())
+{
+	<h5>@ViewBag.NoGames</h5>
+}
+else
+{
+	<table class="table">
+		<tr>
+			<th>Player</th>
+			<th>Status</th>
+		</tr>
+
+
+		@foreach (GameDetails availableGames in Model)
+		{
+			<tr>
+				<td>@availableGames.Username</td>
+				<td>@availableGames.GameStatus</td>
+			</tr>
+		}
+
+	</table>
+}
+
+<a type="submit" class="btn btn-primary" asp-controller="Home" asp-action="AddGame">Add game</a>
