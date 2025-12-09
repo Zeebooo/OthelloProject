@@ -1,5 +1,4 @@
 using Microsoft.Data.SqlClient;
-using Microsoft.AspNetCore.Identity;
 using OthelloProject.Models.Methods;
 
 namespace OthelloProject.Models
