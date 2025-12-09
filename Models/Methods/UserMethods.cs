@@ -235,6 +235,18 @@ namespace OthelloProject.Models
 					message = "An error occurred while removing user";
 					return 0;
 				}
+
+
+				if (rowsAffected > 0)
+				{
+					string sqlCleanupQuery = @"DELETE FROM [Game] 
+					WHERE [User1ID] NOT IN (SELECT [UserID] FROM [User])
+					AND [User2ID] NOT IN (SELECT [UserID] FROM [User])";
+
+					SqlCommand cleanupCmd = new SqlCommand(sqlCleanupQuery, conn);
+					cleanupCmd.ExecuteNonQuery();	
+				}
+
 				return rowsAffected;
 			}
 			catch (Exception ex)
@@ -247,7 +259,5 @@ namespace OthelloProject.Models
 				conn.Close();
 			}
 		}
-
 	}
-
 }

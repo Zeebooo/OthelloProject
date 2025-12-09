@@ -92,7 +92,7 @@ namespace OthelloProject.Models
 			{
 				conn.Close();
 			}
-		}
+		} 
 
 		public int UpdateUser2ID(GameDetails selectedGame, out string message)
 		{
