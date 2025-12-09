@@ -8,8 +8,8 @@
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="text-center mb-4">
-            <h1 class="display-5 mb-3">Logga in</h1>
-            <p class="lead">Ange användarnamn eller e-post och lösenord för att fortsätta.</p>
+            <h1 class="display-5 mb-3">Login</h1>
+            <p class="lead">Enter username and password to continue.</p>
         </div>
 
         @if (!string.IsNullOrWhiteSpace(ViewBag.Message as string))
@@ -27,18 +27,18 @@
 
         <form asp-controller="User" asp-action="Login" method="post" class="card p-4 shadow-sm">
             <div class="mb-3">
-                <label class="form-label" asp-for="Username">Användarnamn eller e-post</label>
+                <label class="form-label" asp-for="Username">Username</label>
                 <input class="form-control" required asp-for="Username"/>
             </div>
 
             <div class="mb-3">
-                <label class="form-label" required asp-for="Password">Lösenord</label>
+                <label class="form-label" required asp-for="Password">Password</label>
                 <input class="form-control" type="password" required asp-for="Password"/>
             </div>
 
             <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-primary">Logga in</button>
-                <a class="btn btn-outline-secondary" asp-controller="User" asp-action="RegisterUser">Registrera</a>
+                <button type="submit" class="btn btn-primary">Login</button>
+                <a class="btn btn-outline-secondary" asp-controller="User" asp-action="RegisterUser">Register</a>
             </div>
         </form>
     </div>
