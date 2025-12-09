@@ -2,7 +2,7 @@
     ViewData["Title"] = "Registrera användare";
 }
 
-<h2 class="mb-4">Registrera användare</h2>
+<h2 class="mb-4">Register user</h2>
 
 @if (!string.IsNullOrWhiteSpace(ViewBag.Message as string))
 {
@@ -13,22 +13,22 @@
 
 <form asp-action="RegisterUser" method="post" class="card p-4 shadow-sm">
     <div class="mb-3">
-        <label class="form-label" for="Username">Användarnamn</label>
+        <label class="form-label" for="Username">Username</label>
         <input class="form-control" id="Username" name="Username" required />
     </div>
 
     <div class="mb-3">
-        <label class="form-label" for="Email">E-post</label>
+        <label class="form-label" for="Email">E-mail</label>
         <input class="form-control" type="email" id="Email" name="Email" required />
     </div>
 
     <div class="mb-3">
-        <label class="form-label" for="Password">Lösenord</label>
+        <label class="form-label" for="Password">Passowrd</label>
         <input class="form-control" type="password" id="Password" name="Password" required />
     </div>
 
     <div class="d-flex gap-2">
-        <button type="submit" class="btn btn-primary">Registrera</button>
-        <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index">Avbryt</a>
+        <button type="submit" class="btn btn-primary">Register</button>
+        <a class="btn btn-outline-secondary" asp-controller="User" asp-action="Login">Go back</a>
     </div>
 </form>
