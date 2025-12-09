@@ -41,7 +41,7 @@ namespace OthelloProject
 
 			if (result == 1)
 			{
-				return View("Games", "Games");
+				return RedirectToAction("Games", "Games");
 			}
 			else
 			{

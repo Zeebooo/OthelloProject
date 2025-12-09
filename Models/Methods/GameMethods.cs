@@ -47,7 +47,6 @@ namespace OthelloProject.Models
 			catch (SqlException ex)
 			{
 				message = ex.Message;
-				Console.WriteLine(message);
 				return 0;
 			}
 			finally

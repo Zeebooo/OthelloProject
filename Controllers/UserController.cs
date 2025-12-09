@@ -62,8 +62,6 @@ namespace OthelloProject.Controllers
 				{
 					// Inloggning lyckades
 					HttpContext.Session.SetInt32("UserID", retrievedUser.UserID);
-					Console.WriteLine("UserID: " + retrievedUser.UserID);
-					Console.WriteLine("Username: " + retrievedUser.Username);
 					return RedirectToAction("Games", "Games");
 				}
 				else
