@@ -93,6 +93,50 @@ namespace OthelloProject.Models
 			}
 		} 
 
+		public List<GameDetails> GetAllGames(out string message)
+		{
+			message = "";
+
+			SqlConnection conn = Connect();
+
+			string sqlQuery = "SELECT * FROM [Game]";
+			SqlCommand cmd = new SqlCommand(sqlQuery, conn);
+
+			List<GameDetails> allGames = new List<GameDetails>();
+
+			try
+			{
+				conn.Open();
+				SqlDataReader reader = cmd.ExecuteReader();
+
+				while (reader.Read())
+				{
+					allGames.Add(new GameDetails
+					{
+						User1ID = (int)reader["User1ID"],
+						GameStatus = reader["Gamestatus"].ToString()
+					});
+				}
+
+				if(allGames.Count == 0)
+				{
+					message = "No games were found";
+					return null;
+				}
+
+				return allGames;
+			}
+			catch(Exception ex)
+			{
+				message = ex.Message;
+				return null;
+			}
+			finally
+			{
+				conn.Close();
+			}
+		}
+
 		public int UpdateUser2ID(GameDetails selectedGame, out string message)
 		{
 			message = "";
