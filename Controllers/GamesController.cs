@@ -21,19 +21,32 @@ namespace OthelloProject
 				return View();
 			}
 
+
 			return View(availableGames);
 		}
 
 		[HttpGet]
 		public IActionResult AddGame()
 		{
+			int? selectedUser = HttpContext.Session.GetInt32("UserID");
+			ViewBag.User1ID = selectedUser;
 			return View();
 		}
 
 		[HttpPost]
-		public IActionResult AddGame(GameDetails gd)
+		public IActionResult AddGame(GameDetails newGame)
 		{
-			return View();
+			string message;
+			int result = new GameMethods().InsertGame(newGame, out message);
+
+			if (result == 1)
+			{
+				return View("Games", "Games");
+			}
+			else
+			{
+				return View();
+			}
 		}
 	}
 

@@ -25,7 +25,7 @@ else
 		@foreach (GameDetails availableGames in Model)
 		{
 			<tr>
-				<td>@availableGames.Username</td>
+				<td>@availableGames.GameName</td>
 				<td>@availableGames.GameStatus</td>
 			</tr>
 		}
@@ -33,4 +33,4 @@ else
 	</table>
 }
 
-<a type="submit" class="btn btn-primary" asp-controller="Game" asp-action="AddGame">Add game</a>
+<a type="submit" class="btn btn-primary" asp-controller="Games" asp-action="AddGame">Add game</a>

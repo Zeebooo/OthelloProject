@@ -1,21 +1,17 @@
 @using Microsoft.IdentityModel.Tokens
 @using OthelloProject.Models.Methods
 @using System.Diagnostics.Eventing.Reader
-@model List<GameDetails>
+@model GameDetails
 
-<form asp-controller="User" asp-action="Login" method="post" class="card p-4 shadow-sm">
+<form asp-controller="Games" asp-action="AddGame" method="post" class="card p-4 shadow-sm">
 	<div class="mb-3">
-		<label class="form-label" asp-for="Username">Username</label>
-		<input class="form-control" required asp-for="Username" />
+		<label class="form-label" asp-for="GameName">Enter name for the game: </label>
+		<input class="form-control" required asp-for="GameName" />
 	</div>
-
-	<div class="mb-3">
-		<label class="form-label" required asp-for="Password">Password</label>
-		<input class="form-control" type="password" required asp-for="Password" />
-	</div>
-
+		<input type="hidden" asp-for="GameStatus" value="Waiting"/>
+		<input type="hidden" asp-for="User1ID" value="@ViewBag.User1ID"/>
+		<input type="hidden" asp-for="Board" value="***"/>
 	<div class="d-flex gap-2">
-		<button type="submit" class="btn btn-primary">Login</button>
-		<a class="btn btn-outline-secondary" asp-controller="User" asp-action="RegisterUser">Register</a>
+		<button type="submit" class="btn btn-primary">Add game</button>
 	</div>
 </form>

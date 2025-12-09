@@ -109,28 +109,31 @@ namespace OthelloProject.Models
 			}
 		}
 
-		public UserDetails VerifyLogin(string username, out string message)
+		public UserDetails? VerifyLogin(string username, out string message)
 		{
 			message = "";
 
 			SqlConnection conn = Connect();
-
 			string sqlQuery = "SELECT * FROM [User] WHERE [Username] = @Username";
 			SqlCommand cmd = new SqlCommand(sqlQuery, conn);
-
 			cmd.Parameters.AddWithValue("@Username", username);
-			UserDetails ud = new UserDetails();
+
+			UserDetails? ud = null;
 
 			try
 			{
 				conn.Open();
 				SqlDataReader reader = cmd.ExecuteReader();
 
-				while (reader.Read())
+				if (reader.Read())
 				{
-					ud.Username = reader["Username"].ToString();
-					ud.Password = reader["Password"].ToString();
-					ud.UserID = (int)reader["UserID"];
+					ud = new UserDetails
+					{
+						UserID = (int)reader["UserID"],
+						Username = reader["Username"].ToString(),
+						Password = reader["Password"].ToString()
+					};
+					Console.WriteLine("Wallah: " + ud.UserID);
 				}
 
 				return ud;
@@ -145,6 +148,7 @@ namespace OthelloProject.Models
 				conn.Close();
 			}
 		}
+
 
 		public List<UserDetails> GetAllUsers(out string message)
 		{

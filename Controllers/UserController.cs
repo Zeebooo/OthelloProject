@@ -51,18 +51,20 @@ namespace OthelloProject.Controllers
 		public IActionResult Login(UserDetails ud)
 		{
 			var uMethod = new UserMethods();
-			var retrievedUser = uMethod.VerifyLogin(ud.Username!, out string errormsg);
+			UserDetails retrievedUser = uMethod.VerifyLogin(ud.Username!, out string errormsg);
 
 			if (retrievedUser != null)
 			{
 				var passwordHasher = new PasswordHasher<UserDetails>();
-				var verificationResult = passwordHasher.VerifyHashedPassword(retrievedUser, retrievedUser.Password!, ud.Password);
+				var verificationResult = passwordHasher.VerifyHashedPassword(retrievedUser, retrievedUser.Password, ud.Password);
 
 				if (verificationResult == PasswordVerificationResult.Success)
 				{
 					// Inloggning lyckades
 					HttpContext.Session.SetInt32("UserID", retrievedUser.UserID);
-					return RedirectToAction("User", "Register");
+					Console.WriteLine("UserID: " + retrievedUser.UserID);
+					Console.WriteLine("Username: " + retrievedUser.Username);
+					return RedirectToAction("Games", "Games");
 				}
 				else
 				{

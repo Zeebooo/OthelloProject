@@ -31,7 +31,7 @@ namespace OthelloProject.Models
 			cmd.Parameters.AddWithValue("@User1ID", gd.User1ID);
 			cmd.Parameters.AddWithValue("@GameStatus", gd.GameStatus.ToString());
 			cmd.Parameters.AddWithValue("@Board", gd.Board.ToString());
-			cmd.Parameters.AddWithValue("@Username", gd.GameName.ToString());
+			cmd.Parameters.AddWithValue("@GameName", gd.GameName.ToString());
 
 			try
 			{
@@ -47,6 +47,7 @@ namespace OthelloProject.Models
 			catch (SqlException ex)
 			{
 				message = ex.Message;
+				Console.WriteLine(message);
 				return 0;
 			}
 			finally
