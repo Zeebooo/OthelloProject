@@ -41,12 +41,18 @@ namespace OthelloProject
 
 			if (result == 1)
 			{
-				return RedirectToAction("Games", "Games");
+				return RedirectToAction("OthelloBoard", "Games");
 			}
 			else
 			{
 				return View();
 			}
+		}
+
+		public IActionResult OthelloBoard()
+		{
+			string initialState = "EEEEEEEEEEEEEEEEEEEEEEEEEEEBWEEEEEEWBEEEEEEEEEEEEEEEEEEEEEEEEEEE";
+			return View(model: initialState);
 		}
 	}
 
