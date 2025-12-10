@@ -94,6 +94,45 @@ namespace OthelloProject.Models
 			}
 		} 
 
+		public GameDetails GetGameByName(string gameName, out string message)
+		{
+			message = "";
+
+			Console.WriteLine("WE ARE HERE");
+
+			SqlConnection conn = Connect();
+
+			string sqlQuery = "SELECT * FROM [Game] WHERE [GameName] = @GameName";
+			SqlCommand cmd = new SqlCommand(sqlQuery, conn);
+
+			cmd.Parameters.AddWithValue("@GameName", gameName);
+			GameDetails gd = new GameDetails();
+
+			try
+			{
+				conn.Open();
+				SqlDataReader reader = cmd.ExecuteReader();
+
+				while (reader.Read())
+				{
+					gd.GameID = (int)reader["GameID"];
+					gd.User1ID = (int)reader["User1ID"];
+					gd.GameStatus = reader["GameStatus"].ToString();
+					gd.Board = reader["Board"].ToString();
+				}
+				return gd;
+			}
+			catch (SqlException ex)
+			{
+				message = ex.Message;
+				return null;
+			}
+			finally
+			{
+				conn.Close();
+			}
+		}
+
 		public List<GameDetails> GetAllGames(out string message)
 		{
 			message = "";

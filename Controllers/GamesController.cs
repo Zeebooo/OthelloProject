@@ -41,7 +41,8 @@ namespace OthelloProject
 
 			if (result == 1)
 			{
-				return RedirectToAction("OthelloBoard", "Games");
+				HttpContext.Session.SetString("GameName", newGame.GameName);
+				return RedirectToAction("OthelloBoard");
 			}
 			else
 			{
@@ -51,6 +52,15 @@ namespace OthelloProject
 
 		public IActionResult OthelloBoard()
 		{
+			string gameName = HttpContext.Session.GetString("GameName") ?? "";
+			Console.WriteLine("Help: " + gameName);
+			GameDetails initiatedGame = new GameMethods().GetGameByName(gameName, out string message);
+			var userMethods = new UserMethods();
+			Console.WriteLine(gameName);
+
+			var user1Name = userMethods.GetUserInfoByID(initiatedGame.User1ID, out string msg1);
+			ViewBag.User1Name = user1Name.Username;
+
 			string initialState = "EEEEEEEEEEEEEEEEEEEEEEEEEEEBWEEEEEEWBEEEEEEEEEEEEEEEEEEEEEEEEEEE";
 			return View(model: initialState);
 		}
