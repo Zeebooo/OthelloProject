@@ -18,7 +18,19 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  background-color: #d1d1d1;
+}
+
+body > .container {
+  flex: 1;
+}
+
+footer {
+  margin-top: auto;
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
