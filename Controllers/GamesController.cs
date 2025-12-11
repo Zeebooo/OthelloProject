@@ -24,6 +24,7 @@ namespace OthelloProject
 			if (sorted)
 			{
 				availableGames = availableGames.OrderByDescending(ag => ag.GameStatus).ToList();
+				ViewBag.Sorted = sorted;
 			}
 
 			if(!string.IsNullOrEmpty(search) && availableGames.Any(ag => ag.GameName.Contains(search, StringComparison.OrdinalIgnoreCase)))

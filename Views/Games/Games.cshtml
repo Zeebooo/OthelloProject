@@ -23,7 +23,13 @@ else
 		<tr>
 			<th>Player</th>
 			<th>Status</th>
-			<th><a asp-controller="Games" asp-action="Games" asp-route-sorted="true">Join button</a></th>
+			@if (ViewBag.Sorted == true)
+			{
+				<th><a asp-controller="Games" asp-action="Games" asp-route-sorted="false">Unsort</a></th>
+			}
+			else{
+				<th><a asp-controller="Games" asp-action="Games" asp-route-sorted="true">Sort by availability</a></th>
+			}
 		</tr>
 
 
