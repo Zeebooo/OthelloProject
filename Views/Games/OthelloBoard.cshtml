@@ -4,6 +4,7 @@
 
     // Make sure we always have 64 characters to work with
     var board = (Model ?? string.Empty).PadRight(64, 'E');
+    string player2Name = ViewBag.User2Name ?? "Waiting for Player 2";
 }
 
 <div class="othello-wrapper">
@@ -14,6 +15,8 @@
     </p>
 
     <p>Player 1: @ViewBag.User1Name </p>
+    <p>Player 2: @player2Name </p>
+
 
     <!-- Form posts which position the user clicked -->
     <form method="post" class="othello-board-form">

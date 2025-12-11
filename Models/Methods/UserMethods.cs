@@ -73,7 +73,7 @@ namespace OthelloProject.Models
 			}
 		}
 
-		public UserDetails GetUserInfoByID(int selectedUserID, out string message)
+		public UserDetails GetUserInfoByID(int? selectedUserID, out string message)
 		{
 			message = "";
 
@@ -93,7 +93,9 @@ namespace OthelloProject.Models
 				while (reader.Read())
 				{
 					ud.Username = reader["Username"].ToString();
+					if (reader["UserID"] != DBNull.Value){
 					ud.UserID = (int)reader["UserID"];
+					}
 				}
 
 				return ud;
@@ -133,7 +135,6 @@ namespace OthelloProject.Models
 						Username = reader["Username"].ToString(),
 						Password = reader["Password"].ToString()
 					};
-					Console.WriteLine("Wallah: " + ud.UserID);
 				}
 
 				return ud;
