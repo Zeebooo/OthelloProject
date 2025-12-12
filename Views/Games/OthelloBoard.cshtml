@@ -2,26 +2,30 @@
 @{
     ViewData["Title"] = "Othello Board";
 
-    // Make sure we always have 64 characters to work with
-    var board = (Model ?? string.Empty).PadRight(64, 'E');
+    // 0 = empty, 1 = black, 2 = white
+    int[,] board = new int[8, 8]
+    {
+        { 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 1, 2, 0, 0, 0 },
+        { 0, 0, 0, 2, 1, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0 }
+    };
+
     string player2Name = ViewBag.User2Name ?? "Waiting for Player 2";
 }
-<style>
-    body { overflow: hidden; }
-    .app-footer {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        z-index: 10;
-    }
-</style>
 
 <div class="othello-form othello-board-card">
     <div class="othello-wrapper board-wrapper">
         <div class="board-players">
             <p class="mb-0 othello-player-label">Player 1: @ViewBag.User1Name</p>
-            <p class="mb-0 othello-player-label">Player 2: @player2Name</p>
+            @{
+                var player2Css = ViewBag.User2Name == null ? "othello-player-label othello-player-waiting" : "othello-player-label";
+            }
+            <p class="mb-0 @player2Css">Player 2: @player2Name</p>
         </div>
 
         <!-- Form posts which position the user clicked -->
@@ -32,10 +36,10 @@
                     for (int col = 0; col < 8; col++)
                     {
                         var index = row * 8 + col;
-                        var cell = board[index];
+                        var cell = board[row, col];
 
                         <div class="othello-cell">
-                            @if (cell == 'E')
+                            @if (cell == 0)
                             {
                                 <!-- Empty cell = clickable button -->
                                 <button
@@ -45,12 +49,12 @@
                                     class="othello-cell-button">
                                 </button>
                             }
-                            else if (cell == 'W')
+                            else if (cell == 2)
                             {
                                 <!-- White piece -->
                                 <div class="othello-piece white"></div>
                             }
-                            else if (cell == 'B')
+                            else if (cell == 1)
                             {
                                 <!-- Black piece -->
                                 <div class="othello-piece black"></div>
@@ -73,4 +77,7 @@
     </div>
 </div>
 
-<a class="othello-leave-btn" href="#">Leave Game</a>
+<form asp-controller="Games" asp-action="LeaveGame" method="post" class="othello-leave-form">
+    @Html.AntiForgeryToken()
+    <button type="submit" class="othello-leave-btn">Leave Game</button>
+</form>

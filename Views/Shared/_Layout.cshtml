@@ -8,10 +8,15 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/OthelloProject.styles.css" asp-append-version="true" />
-	<link rel="stylesheet" href="~/css/OthelloBoard.css" />
+	<link rel="stylesheet" href="~/css/OthelloBoard.css" asp-append-version="true" />
 	
 </head>
 <body>
+@{
+    var isLoggedIn = Context?.Session?.GetInt32("UserID") != null;
+    var inGame = !string.IsNullOrEmpty(Context?.Session?.GetString("GameName"));
+    var isBoardPage = Context?.Request?.Path.StartsWithSegments("/games/othelloboard", StringComparison.OrdinalIgnoreCase) == true;
+}
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light app-navbar mb-3">
             <div class="container-fluid">
@@ -21,14 +26,17 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link othello-nav-link" asp-area="" asp-controller="Games" asp-action="Games">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link othello-nav-link" asp-area="" asp-controller="User" asp-action="SelectUser">Användare</a>
-                        </li>
-                    </ul>
+                    @if (isLoggedIn && !(inGame && isBoardPage))
+                    {
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link othello-nav-link" asp-area="" asp-controller="Games" asp-action="Games">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link othello-nav-link" asp-area="" asp-controller="User" asp-action="SelectUser">Användare</a>
+                            </li>
+                        </ul>
+                    }
                 </div>
             </div>
         </nav>
