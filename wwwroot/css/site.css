@@ -222,12 +222,28 @@ footer {
         0 0 0 3px rgba(45, 204, 133, 0.24);
 }
 
-.login-border {
+.fra-border {
+    position: relative;
+    background: rgba(18, 22, 28, 0.78);
+}
+
+.fra-border::before {
+    content: "";
+    position: absolute;
+    top: -63px;
+    right: -67px;
+    bottom: -73px;
+    left: -71px;
     border-style: solid;
     border-width: 63px 67px 73px 71px;
     border-image: url("/images/border.png") 63 67 73 71 fill / 63px 67px 73px 71px;
-    padding: 63px 67px 73px 71px;
-    background: rgba(18, 22, 28, 0.78);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.fra-border > * {
+    position: relative;
+    z-index: 1;
 }
 
 .othello-table {
