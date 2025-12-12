@@ -230,15 +230,21 @@ footer {
 .fra-border::before {
     content: "";
     position: absolute;
-    top: -63px;
-    right: -67px;
-    bottom: -73px;
-    left: -71px;
+    top: -15px;
+    right: -15px;
+    bottom: -15px;
+    left: -15px;
     border-style: solid;
-    border-width: 63px 67px 73px 71px;
-    border-image: url("/images/border.png") 63 67 73 71 fill / 63px 67px 73px 71px;
+    border-width: 70px 70px 70px 70px;
+    border-image: url("/images/border.png") 70 70 70 70 fill / 70px 70px 70px 70px;
+    border-radius: 0;
+    box-shadow: none;
     pointer-events: none;
     z-index: 0;
+}
+
+.fra-border::after {
+    content: none;
 }
 
 .fra-border > * {
