@@ -47,13 +47,16 @@ namespace OthelloProject
 		public IActionResult AddGame(GameDetails newGame)
 		{
 			string message;
+			GameDetails gd = new GameMethods().GetGameByName(newGame.GameName, out string message2);
 
-			if (new GameMethods().GetGameByName(newGame.GameName, out string message2) != null)
+			if (gd.GameName != null)
 			{
 				return View();
 			}
 			else
 			{
+				string initialState = "EEEEEEEEEEEEEEEEEEEEEEEEEEEBWEEEEEEWBEEEEEEEEEEEEEEEEEEEEEEEEEEE";
+				newGame.Board = initialState;
 				int result = new GameMethods().InsertGame(newGame, out message);
 
 				if (result == 1)
@@ -90,7 +93,7 @@ namespace OthelloProject
 		public IActionResult JoinGame(GameDetails gd)
 		{
 			gd.GameName = new GameMethods().GetGameInfoByID(gd.GameID, out string message).GameName;
-			gd.User2ID = (int)(HttpContext.Session.GetInt32("UserID"));
+			gd.User2ID = (int)HttpContext.Session.GetInt32("UserID");
 			HttpContext.Session.SetString("GameName", gd.GameName);
 
 			GameMethods gm = new GameMethods();
