@@ -84,4 +84,7 @@
     </div>
 </div>
 
-<a class="othello-leave-btn" href="#">Leave Game</a>
+<form asp-controller="Games" asp-action="LeaveGame" method="post" class="othello-leave-form">
+    @Html.AntiForgeryToken()
+    <button type="submit" class="othello-leave-btn">Leave Game</button>
+</form>

@@ -3,18 +3,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // Lägg till session-tjänster
-builder.Services.AddDistributedMemoryCache(); // behövs för session
+builder.Services.AddDistributedMemoryCache();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession(options =>
 {
 	options.IdleTimeout = TimeSpan.FromMinutes(30);
 	options.Cookie.HttpOnly = true;
-	options.Cookie.IsEssential = true; // krävs för att session-cookien alltid ska sparas
+	options.Cookie.IsEssential = true;
 });
 
 var app = builder.Build();
 
-// Middleware
 if (!app.Environment.IsDevelopment())
 {
 	app.UseExceptionHandler("/Home/Error");
@@ -28,14 +27,12 @@ app.UseRouting();
 
 app.UseSession();
 
-// Tvinga inloggning på alla sidor utom login/registrering och statiska filer
 app.Use(async (context, next) =>
 {
 	var path = context.Request.Path;
 	var isAuthenticated = context.Session.GetInt32("UserID") != null;
 	var endpoint = context.GetEndpoint();
 
-	// Tillåt uttryckliga [AllowAnonymous]-endpoints och statiska filer (endpoint == null efter UseStaticFiles)
 	var allowAnonymous = endpoint?.Metadata.GetMetadata<Microsoft.AspNetCore.Authorization.IAllowAnonymous>();
 	var isPublicPath =
 		path.HasValue &&
@@ -52,6 +49,36 @@ app.Use(async (context, next) =>
 	if (!isAuthenticated && allowAnonymous is null && !isPublicPath)
 	{
 		context.Response.Redirect("/User/Login");
+		return;
+	}
+
+	await next();
+});
+
+// Lås fast användaren på brädet när ett spel pågår (GameName i session)
+app.Use(async (context, next) =>
+{
+	var inGame = !string.IsNullOrEmpty(context.Session.GetString("GameName"));
+
+	if (!inGame)
+	{
+		await next();
+		return;
+	}
+
+	var path = context.Request.Path;
+	var allowedPath =
+		path.StartsWithSegments("/games/othelloboard", StringComparison.OrdinalIgnoreCase) ||
+		path.StartsWithSegments("/games/leavegame", StringComparison.OrdinalIgnoreCase) ||
+		path.StartsWithSegments("/css", StringComparison.OrdinalIgnoreCase) ||
+		path.StartsWithSegments("/js", StringComparison.OrdinalIgnoreCase) ||
+		path.StartsWithSegments("/lib", StringComparison.OrdinalIgnoreCase) ||
+		path.StartsWithSegments("/images", StringComparison.OrdinalIgnoreCase) ||
+		path.StartsWithSegments("/othelloproject.styles.css", StringComparison.OrdinalIgnoreCase);
+
+	if (!allowedPath)
+	{
+		context.Response.Redirect("/Games/OthelloBoard");
 		return;
 	}
 

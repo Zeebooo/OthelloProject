@@ -110,6 +110,20 @@ namespace OthelloProject
 			}
 
 		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult LeaveGame()
+		{
+			var gameName = HttpContext.Session.GetString("GameName");
+			if (!string.IsNullOrEmpty(gameName))
+			{
+				new GameMethods().DeleteGameByName(gameName, out string _);
+			}
+
+			HttpContext.Session.Remove("GameName");
+			return RedirectToAction("Games");
+		}
 	}
 
 }

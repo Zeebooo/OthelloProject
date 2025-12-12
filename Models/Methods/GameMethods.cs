@@ -286,5 +286,41 @@ namespace OthelloProject.Models
 				conn.Close();
 			}
 		}
+
+		public int DeleteGameByName(string gameName, out string message)
+		{
+			message = "";
+
+			if (string.IsNullOrEmpty(gameName))
+			{
+				message = "Game name is required.";
+				return 0;
+			}
+
+			SqlConnection conn = Connect();
+			string sqlQuery = "DELETE FROM [Game] WHERE [GameName] = @GameName";
+			SqlCommand cmd = new SqlCommand(sqlQuery, conn);
+			cmd.Parameters.AddWithValue("@GameName", gameName);
+
+			try
+			{
+				conn.Open();
+				int rowsAffected = cmd.ExecuteNonQuery();
+				if (rowsAffected != 1)
+				{
+					message = "No game deleted.";
+				}
+				return rowsAffected;
+			}
+			catch (Exception ex)
+			{
+				message = ex.Message;
+				return 0;
+			}
+			finally
+			{
+				conn.Close();
+			}
+		}
 	}
 }
