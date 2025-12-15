@@ -184,6 +184,46 @@ namespace OthelloProject.Models
 			}
 		}
 
+		public string GetBoard(GameDetails gd, out string message)
+		{
+			message = "";
+
+			SqlConnection conn = Connect();
+
+			string sqlQuery = "SELECT [Board] FROM [Game] WHERE [GameID] = @GameID";
+			SqlCommand cmd = new SqlCommand(sqlQuery, conn);
+
+			cmd.Parameters.AddWithValue("@GameID", gd.GameID);
+			string newBoard;
+
+			try
+			{
+				conn.Open();
+				SqlDatareader = cmd.ExecuteReader();
+
+				while (reader.Read())
+				{
+					newBoard = reader["Board"].ToString();
+				}
+
+				if (newBoard.IsNullOrEmpty())
+				{
+					message = "An error occurred while retrieving board";
+					return null;
+				}
+
+				return newBoard;
+			}
+			catch(Exception ex)
+			{
+				message = ex.Message;
+				return null;
+			}
+			finally
+			{
+				conn.Close();
+			}
+		}
 
 		public int UpdateUser2ID(GameDetails game, out string message)
 		{

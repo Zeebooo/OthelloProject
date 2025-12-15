@@ -36,7 +36,7 @@
                                     name="position"
 									asp-controller="BoardController"
 									asp-action="BoardController"
-                                    value="@cell"
+                                    asp-for-cell="@cell"
                                     class="othello-cell-button">
                                 </button>
                             }
@@ -58,7 +58,7 @@
 									asp-controller="BoardController"
 									asp-action="BoardController"
                                     name="position"
-                                    value="@cell"
+                                    asp-for-cell="@cell"
                                     class="othello-cell-button">
                                 </button>
                             }
