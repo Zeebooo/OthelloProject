@@ -4,73 +4,60 @@
 @model List<GameDetails>
 
 @{
-    ViewData["Title"] = "Inloggad";
+	ViewData["Title"] = "Inloggad";
 }
 
 <div class="othello-form fra-border" style="max-width: 760px;">
-    <div class="mb-3 text-center">
-        <h1 class="display-6 mb-2">Available games</h1>
-        <p class="mb-0 text-muted">Create a new game or join an existing one.</p>
-    </div>
+	<div class="mb-3 text-center">
+		<h1 class="display-6 mb-2">Available games</h1>
+		<p class="mb-0 text-muted">Create a new game or join an existing one.</p>
+	</div>
 
-    @if (Model.IsNullOrEmpty())
-    {
-        <h5 class="text-center">@ViewBag.NoGames</h5>
-    }
-    else
-    {
-        <div class="d-flex flex-nowrap justify-content-between align-items-center gap-3 mb-4 mt-5">
-            <form method="get"
-                  asp-action="Games"
-                  asp-controller="Games"
-                  class="d-flex flex-nowrap gap-2 justify-content-start align-items-center mb-0 flex-grow-1">
-                <input type="text"
-                       name="search"
-                       placeholder="Search by game name"
-                       class="othello-input"
-                       style="max-width: 240px;"
-                       value="@Context.Request.Query["search"]" />
-                <button type="submit" value="search" class="othello-btn">
-                    Search
-                </button>
-                @if (ViewBag.Sorted == true)
-                {
-                    <a asp-controller="Games"
-                       asp-action="Games"
-                       asp-route-sorted="false"
-                       class="othello-btn-back">
-                        Unsort
-                    </a>
-                }
-                else
-                {
-                    <a asp-controller="Games"
-                       asp-action="Games"
-                       asp-route-sorted="true"
-                       class="othello-btn-back">
-                        Sort by availability
-                    </a>
-                }
-            </form>
+	@if (Model.IsNullOrEmpty())
+	{
+		<h5 class="text-center">@ViewBag.NoGames</h5>
+		<a type="submit" class="othello-btn" asp-controller="Games" asp-action="AddGame">
+			+
+		</a>
+	}
+	else
+	{
+		<div class="d-flex flex-nowrap justify-content-between align-items-center gap-3 mb-4 mt-5">
+			<form method="get" asp-action="Games" asp-controller="Games"
+				class="d-flex flex-nowrap gap-2 justify-content-start align-items-center mb-0 flex-grow-1">
+				<input type="text" name="search" placeholder="Search by game name" class="othello-input"
+					style="max-width: 240px;" value="@Context.Request.Query["search"]" />
+				<button type="submit" value="search" class="othello-btn">
+					Search
+				</button>
+				@if (ViewBag.Sorted == true)
+				{
+					<a asp-controller="Games" asp-action="Games" asp-route-sorted="false" class="othello-btn-back">
+						Unsort
+					</a>
+				}
+				else
+				{
+					<a asp-controller="Games" asp-action="Games" asp-route-sorted="true" class="othello-btn-back">
+						Sort by availability
+					</a>
+				}
+			</form>
 
-            <a type="submit"
-               class="othello-btn"
-               asp-controller="Games"
-               asp-action="AddGame">
-                +
-            </a>
-        </div>
+			<a type="submit" class="othello-btn" asp-controller="Games" asp-action="AddGame">
+				+
+			</a>
+		</div>
 
-        <div id="gameListContainer">
-            @await Html.PartialAsync("GameList", Model)
-        </div>
-    }
+		<div id="gameListContainer">
+			@await Html.PartialAsync("GameList", Model)
+		</div>
+	}
 </div>
 @section Scripts {
-    <script>
-        // Razor skriver ut värdet direkt till JS
-        const sorted = @((ViewBag.Sorted ?? false).ToString().ToLower());
-    </script>
-    <script src="~/js/gameList.js"></script>
+	<script>
+		// Razor skriver ut värdet direkt till JS
+		const sorted = @((ViewBag.Sorted ?? false).ToString().ToLower());
+	</script>
+	<script src="~/js/gameList.js"></script>
 }
-

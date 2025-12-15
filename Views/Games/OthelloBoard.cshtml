@@ -2,13 +2,12 @@
 @{
     ViewData["Title"] = "Othello Board";
 
-    // 0 = tom, 1 = svart, 2 = vit
-    var board = Model ?? new int[8, 8];
+    // 0 = empty, 1 = black, 2 = white
 
     string player2Name = ViewBag.User2Name ?? "Waiting for Player 2";
 }
 
-<div class="othello-form othello-board-card fra-border">
+<div class="othello-form othello-board-card">
     <div class="othello-wrapper board-wrapper">
         <div class="board-players">
             <p class="mb-0 othello-player-label">Player 1: @ViewBag.User1Name</p>
@@ -26,7 +25,7 @@
                     for (int col = 0; col < 8; col++)
                     {
                         var index = row * 8 + col;
-                        var cell = board[row, col];
+                        var cell = @Model[row, col];
 
                         <div class="othello-cell">
                             @if (cell == 0)
