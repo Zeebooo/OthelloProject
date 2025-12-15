@@ -287,6 +287,44 @@ namespace OthelloProject.Models
 			}
 		}
 
+		public int UpdateBoard(GameDetails gd, out string message)
+		{
+			message = "";
+
+			SqlConnection conn = Connect();
+
+			string sqlQuery = "UPDATE [Game] SET [Board] WHERE [GameID] = @GameID";
+
+			SqlCommand cmd = new SqlCommand(sqlQuery, conn);
+
+			cmd.Parameters.AddWithValue("@Board", gd.Board);
+			cmd.Parameters.AddWithValue("@GameID", gd.GameID);
+
+			try
+			{
+				conn.Open();
+
+				int rowsAffected = cmd.ExecuteNonQuery();
+
+				if(rowsAffected != 1)
+				{
+					message = "An error occurred while updating board";
+					return 0;
+				}
+				return rowsAffected;
+			}
+			catch(Exception ex)
+			{
+				message = ex.Message;
+				return 0;
+			}
+			finally
+			{
+				conn.Close();
+			}
+
+		}
+
 		public int DeleteGameByName(string gameName, out string message)
 		{
 			message = "";
