@@ -46,10 +46,7 @@ namespace OthelloProject
 		[HttpPost]
 		public IActionResult AddGame(GameDetails newGame)
 		{
-			string message;
-			GameDetails gd = new GameMethods().GetGameByName(newGame.GameName, out string message2);
-
-			if (gd.GameName != null)
+			if (new GameMethods().GetGameByName(newGame.GameName, out string message1).GameName != null)
 			{
 				return View();
 			}
@@ -57,7 +54,7 @@ namespace OthelloProject
 			{
 				string initialState = "EEEEEEEEEEEEEEEEEEEEEEEEEEEBWEEEEEEWBEEEEEEEEEEEEEEEEEEEEEEEEEEE";
 				newGame.Board = initialState;
-				int result = new GameMethods().InsertGame(newGame, out message);
+				int result = new GameMethods().InsertGame(newGame, out string message2);
 
 				if (result == 1)
 				{
