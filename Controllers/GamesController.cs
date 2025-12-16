@@ -132,7 +132,6 @@ namespace OthelloProject
 					int successWinnerID = new GameMethods().UpdateGameWinnerID(initiatedGame, out string messge4);
 					int successStatus = new GameMethods().UpdateGameStatus(initiatedGame.GameID, out string message5);
 					ViewBag.Winner = user1Name.Username;
-					Console.WriteLine("Winner is: " + user1Name.Username);
 				}
 				else if (player2Points > player1Points)
 				{
@@ -141,8 +140,6 @@ namespace OthelloProject
 					int successWinnerID = new GameMethods().UpdateGameWinnerID(initiatedGame, out string message2);
 					int successStatus = new GameMethods().UpdateGameStatus(initiatedGame.GameID, out string message3);
 					ViewBag.Winner = user2Name.Username;
-					Console.WriteLine("hej");
-					Console.WriteLine("Winner is: " + user2Name.Username);
 				}
 
 				return View(model: boardArray);
