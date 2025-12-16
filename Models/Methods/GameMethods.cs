@@ -410,7 +410,7 @@ namespace OthelloProject.Models
 
 			SqlConnection conn = Connect();
 
-			string sqlQuery = "UPDATE [Game] SET [Board] WHERE [GameID] = @GameID";
+			string sqlQuery = "UPDATE [Game] SET [Board] = @Board WHERE [GameID] = @GameID";
 
 			SqlCommand cmd = new SqlCommand(sqlQuery, conn);
 

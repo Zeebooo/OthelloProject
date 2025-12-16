@@ -46,10 +46,7 @@ namespace OthelloProject
 		[HttpPost]
 		public IActionResult AddGame(GameDetails newGame)
 		{
-			string message;
-			GameDetails gd = new GameMethods().GetGameByName(newGame.GameName, out string message2);
-
-			if (gd.GameName != null)
+			if (new GameMethods().GetGameByName(newGame.GameName, out string message1).GameName != null)
 			{
 				return View();
 			}
@@ -57,7 +54,7 @@ namespace OthelloProject
 			{
 				string initialState = "EEEEEEEEEEEEEEEEEEEEEEEEEEEBWEEEEEEWBEEEEEEEEEEEEEEEEEEEEEEEEEEE";
 				newGame.Board = initialState;
-				int result = new GameMethods().InsertGame(newGame, out message);
+				int result = new GameMethods().InsertGame(newGame, out string message2);
 
 				if (result == 1)
 				{
@@ -88,8 +85,8 @@ namespace OthelloProject
 			}
 
 			int currentPlayer = new GameMethods().GetCurrentPlayer(initiatedGame, out string msg3);
-			if( currentPlayer == HttpContext.Session.GetInt32("CurrentPlayer"))
-			{				
+			if (currentPlayer == HttpContext.Session.GetInt32("CurrentPlayer"))
+			{
 				ViewBag.CurrentPlayer = currentPlayer;
 			}
 
@@ -163,16 +160,32 @@ namespace OthelloProject
 			string currentBoard = gm.GetBoard(gd, out string message2);
 			int[,] newBoard = new ConverterMethods().ConvertBoardStringToArray(currentBoard);
 
-			if(currentplayer == 1)
-			{
-				gd.CurrentPlayer = 2;
-				gm.UpdateCurrentPlayer(gd, out string message3);
+			bool success = gameLogic.BoardState(row, col, currentplayer, newBoard, gd);
+
+			if(success == false){
+				
+				Console.WriteLine("Fuck you!!");
+				
+				return RedirectToAction("OthelloBoard");
+			}else if (success == true){
+				
+				Console.WriteLine("Hell yeah!!!");
+
+				if (currentplayer == 1)
+				{
+					gd.CurrentPlayer = 2;
+					gm.UpdateCurrentPlayer(gd, out string message3);
+				}
+				else if (currentplayer == 2)
+				{
+					gd.CurrentPlayer = 1;
+					gm.UpdateCurrentPlayer(gd, out string message4);
+				}
+
 			}
-			else if(currentplayer == 2)
-			{
-				gd.CurrentPlayer = 1;
-				gm.UpdateCurrentPlayer(gd, out string message4);
-			}
+
+
+			
 
 			return RedirectToAction("OthelloBoard");
 		}
