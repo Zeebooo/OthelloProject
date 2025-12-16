@@ -196,7 +196,7 @@ namespace OthelloProject.Controllers
 			}
 
 			int totalGames, gamesWon;
-				int result = um.GetWinningStats(userId.Value, out totalGames, out gamesWon, out string statsMsg);
+			int result = um.GetWinningStats(userId.Value, out totalGames, out gamesWon, out string statsMsg);
 			int gamesLost = totalGames - gamesWon;
 
 			if (result != 1)

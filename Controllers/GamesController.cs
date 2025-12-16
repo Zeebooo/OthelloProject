@@ -35,6 +35,15 @@ namespace OthelloProject
 			return View(availableGames);
 		}
 
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult FinishedGame()
+		{
+			HttpContext.Session.Remove("GameName");
+			Console.WriteLine("hallo");
+			return RedirectToAction("Games", "Games");
+		}
+
 		[HttpGet]
 		public IActionResult AddGame()
 		{
@@ -101,17 +110,18 @@ namespace OthelloProject
 				{
 					if (boardArray[row, col] == 1)
 					{
-						player2Points++;
+						player1Points++;
 					}
 					else if (boardArray[row, col] == 2)
 					{
-						player1Points++;
+						player2Points++;
 					}
 				}
 			}
-			
-			ViewBag.Player2Points = player2Points;
+
 			ViewBag.Player1Points = player1Points;
+			ViewBag.Player2Points = player2Points;
+
 
 			if (validMoves.IsNullOrEmpty())
 			{
@@ -119,17 +129,20 @@ namespace OthelloProject
 				{
 					initiatedGame.WinnerID = initiatedGame.User1ID;
 					initiatedGame.GameStatus = "Finished";
-					int successWinnerID = new GameMethods().UpdateGameWinnerID(initiatedGame, out string message2);
-					int successStatus = new GameMethods().UpdateGameStatus(initiatedGame.GameID, out string message3);
-					Console.WriteLine("Winner is: " + user2Name.Username);
+					int successWinnerID = new GameMethods().UpdateGameWinnerID(initiatedGame, out string messge4);
+					int successStatus = new GameMethods().UpdateGameStatus(initiatedGame.GameID, out string message5);
+					ViewBag.Winner = user1Name.Username;
+					Console.WriteLine("Winner is: " + user1Name.Username);
 				}
 				else if (player2Points > player1Points)
 				{
 					initiatedGame.WinnerID = initiatedGame.User2ID;
 					initiatedGame.GameStatus = "Finished";
-					int successWinnerID = new GameMethods().UpdateGameWinnerID(initiatedGame, out string messge4);
-					int successStatus = new GameMethods().UpdateGameStatus(initiatedGame.GameID, out string message5);
-					Console.WriteLine("Winner is: " + user1Name.Username);
+					int successWinnerID = new GameMethods().UpdateGameWinnerID(initiatedGame, out string message2);
+					int successStatus = new GameMethods().UpdateGameStatus(initiatedGame.GameID, out string message3);
+					ViewBag.Winner = user2Name.Username;
+					Console.WriteLine("hej");
+					Console.WriteLine("Winner is: " + user2Name.Username);
 				}
 
 				return View(model: boardArray);
