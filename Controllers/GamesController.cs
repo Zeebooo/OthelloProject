@@ -118,13 +118,17 @@ namespace OthelloProject
 				if (player1Points > player2Points)
 				{
 					initiatedGame.WinnerID = initiatedGame.User1ID;
-					int success = new GameMethods().UpdateGameWinnerID(initiatedGame, out string message2);
+					initiatedGame.GameStatus = "Finished";
+					int successWinnerID = new GameMethods().UpdateGameWinnerID(initiatedGame, out string message2);
+					int successStatus = new GameMethods().UpdateGameStatus(initiatedGame.GameID, out string message3);
 					Console.WriteLine("Winner is: " + user2Name.Username);
 				}
 				else if (player2Points > player1Points)
 				{
 					initiatedGame.WinnerID = initiatedGame.User2ID;
-					int success = new GameMethods().UpdateGameWinnerID(initiatedGame, out string messge3);
+					initiatedGame.GameStatus = "Finished";
+					int successWinnerID = new GameMethods().UpdateGameWinnerID(initiatedGame, out string messge4);
+					int successStatus = new GameMethods().UpdateGameStatus(initiatedGame.GameID, out string message5);
 					Console.WriteLine("Winner is: " + user1Name.Username);
 				}
 
