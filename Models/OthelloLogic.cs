@@ -103,5 +103,22 @@ namespace OthelloProject.Models
 			return false;
 
 		}
+
+		public List<int[,]> GetValidMoves(GameDetails gd)
+		{
+			string board = gd.Board;
+			int [,] boardArray = new ConverterMethods().ConvertBoardStringToArray(board);
+			
+			for(int row = 0; row <= 7; row++)
+			{
+				for (int col = 0; col <= 7; col++)
+				{
+					if(boardArray[row, col] == 0)
+					{
+						
+					}
+				}
+			}
+		}
 	}
 }
