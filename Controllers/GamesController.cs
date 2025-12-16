@@ -59,7 +59,7 @@ namespace OthelloProject
 				if (result == 1)
 				{
 					HttpContext.Session.SetString("GameName", newGame.GameName);
-					HttpContext.Session.SetInt32("CurrentPlayer", 1);
+					HttpContext.Session.SetInt32("CurrentPlayer");
 					return RedirectToAction("OthelloBoard");
 				}
 				else
@@ -85,8 +85,8 @@ namespace OthelloProject
 			}
 
 			int currentPlayer = new GameMethods().GetCurrentPlayer(initiatedGame, out string msg3);
-			if( currentPlayer == HttpContext.Session.GetInt32("CurrentPlayer"))
-			{				
+			if (currentPlayer == HttpContext.Session.GetInt32("CurrentPlayer"))
+			{
 				ViewBag.CurrentPlayer = currentPlayer;
 			}
 
@@ -160,12 +160,12 @@ namespace OthelloProject
 			string currentBoard = gm.GetBoard(gd, out string message2);
 			int[,] newBoard = new ConverterMethods().ConvertBoardStringToArray(currentBoard);
 
-			if(currentplayer == 1)
+			if (currentplayer == 1)
 			{
 				gd.CurrentPlayer = 2;
 				gm.UpdateCurrentPlayer(gd, out string message3);
 			}
-			else if(currentplayer == 2)
+			else if (currentplayer == 2)
 			{
 				gd.CurrentPlayer = 1;
 				gm.UpdateCurrentPlayer(gd, out string message4);
