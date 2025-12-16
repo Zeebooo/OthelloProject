@@ -135,15 +135,6 @@ namespace OthelloProject.Models
 
 									if (boardArray[nextRowInDir, nextColInDir] == player)
 									{
-										int flipRow = row + rowDir;
-										int flipCol = col + colDir;
-
-										while (boardArray[flipRow, flipCol] != player)
-										{
-											flipRow += rowDir;
-											flipCol += colDir;
-										}
-
 										validMoves.Add((row, col));
 										break;
 									}
@@ -151,7 +142,6 @@ namespace OthelloProject.Models
 									nextRowInDir += rowDir;
 									nextColInDir += colDir;
 								}
-
 							}
 						}
 					}
