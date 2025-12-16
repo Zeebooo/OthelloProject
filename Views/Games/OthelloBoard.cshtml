@@ -15,6 +15,7 @@
 			}
 			<p class="mb-0 @player2Css">Player 2: @player2Name</p>
 		</div>
+		<p>Currentplayer: @ViewBag.CurrentPlayer</p>
 
 		<!-- Form posts which position the user clicked -->
 		<div class="othello-board">
@@ -26,7 +27,7 @@
 					var cell = @Model[row, col];
 
 					<div class="othello-cell">
-						@if (cell == 0 && playerTurn == ViewBag.CurrentPlayer)
+						@if (cell == 0 && playerTurn == ViewBag.CurrentPlayer && player2Name != "Waiting for Player 2")
 						{
 							<form method="post" asp-controller="Games" asp-action="makeMove">
 								<input type="hidden" name="row" value="@row" />
