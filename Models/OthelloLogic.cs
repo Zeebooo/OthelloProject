@@ -38,7 +38,6 @@ namespace OthelloProject.Models
 						board[flipRow, flipCol] = player;
 						flipRow += dirRow;
 						flipCol += dirCol;
-						Console.WriteLine("WALLAH");
 					}
 
 					string newBoard = new ConverterMethods().ConvertBoardArrayToString(board);
@@ -50,7 +49,6 @@ namespace OthelloProject.Models
 						return -1;
 
 					}
-					Console.WriteLine("VI KOM HIT");
 					return 1;
 				}
 
