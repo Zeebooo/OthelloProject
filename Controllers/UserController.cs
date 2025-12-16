@@ -34,19 +34,17 @@ namespace OthelloProject.Controllers
 			{
 				case -2:
 					ViewBag.Message = "Email is already in use!";
-					break;
+					return View("Register");
 				case -1:
 					ViewBag.Message = "User already exists.";
-					break;
+					return View("Register");
 				case 1:
 					ViewBag.Message = "Registrition succesful .";
-					break;
+					return RedirectToAction("Login");
 				default:
 					ViewBag.Message = "Unexpected error.";
-					break;
+					return View("Register");
 			}
-
-			return View("Register");
 		}
 
 		[AllowAnonymous]
@@ -130,8 +128,8 @@ namespace OthelloProject.Controllers
 			}
 
 			// Alltid samma svar för att inte läcka om e-post finns
-			TempData["ProfileMessage"] = "Om e-postadressen finns har ett temporärt lösenord skickats.";
-			return RedirectToAction("Login");
+			TempData["ForgotMessage"] = "Om e-postadressen finns har ett temporärt lösenord skickats.";
+			return RedirectToAction("ForgotPassword");
 		}
 
 		private bool SendTempPassword(string toEmail, string username, string tempPassword, out string error)

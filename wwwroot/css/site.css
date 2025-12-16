@@ -494,6 +494,21 @@ footer {
     transform: translateY(-1px);
 }
 
+.forgot-link {
+    color: #21c579;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    padding-top: 4px;
+    opacity: 0.5;
+}
+
+.forgot-link:hover {
+    color: #1aa564;
+    text-decoration: none;
+    opacity: 1;
+}
+
 .app-navbar {
     background: rgba(15, 18, 22, 0.82);
     border: 1px solid rgba(255, 255, 255, 0.08);

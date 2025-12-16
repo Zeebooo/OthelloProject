@@ -1,0 +1,59 @@
+@model OthelloProject.ViewModels.ProfileViewModel
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="othello-form fra-border" style="max-width: 520px !important;">
+        <h3 class="mb-3">Profile</h3>
+
+        @if (!string.IsNullOrWhiteSpace(TempData["ProfileMessage"] as string))
+        {
+            <div class="alert alert-success">@TempData["ProfileMessage"]</div>
+        }
+        @if (!string.IsNullOrWhiteSpace(ViewBag.Error as string))
+        {
+            <div class="alert alert-danger">@ViewBag.Error</div>
+        }
+
+        <form asp-action="Profile" method="post" class="mb-0">
+            @Html.AntiForgeryToken()
+
+            <div class="othello-form-group">
+                <label class="othello-label">Username</label>
+                <input asp-for="Username" class="othello-input" />
+                <span asp-validation-for="Username" class="text-danger small"></span>
+            </div>
+
+            <div class="othello-form-group">
+                <label class="othello-label">Email</label>
+                <input asp-for="Email" class="othello-input" />
+                <span asp-validation-for="Email" class="text-danger small"></span>
+            </div>
+
+            <hr />
+
+            <div class="othello-form-group">
+                <label class="othello-label">New password (optional)</label>
+                <input asp-for="NewPassword" type="password" class="othello-input" />
+                <span asp-validation-for="NewPassword" class="text-danger small"></span>
+            </div>
+
+            <div class="othello-form-group">
+                <label class="othello-label">Confirm new password</label>
+                <input asp-for="ConfirmPassword" type="password" class="othello-input" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="othello-btn">Save</button>
+                <a asp-controller="Games" asp-action="Games" class="othello-btn-back">Back</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

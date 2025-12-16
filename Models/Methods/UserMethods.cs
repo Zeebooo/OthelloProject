@@ -1,6 +1,7 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.AspNetCore.Identity;
 using OthelloProject.Models.Methods;
+using System;
 using Microsoft.Identity.Client;
 
 namespace OthelloProject.Models
@@ -347,40 +348,117 @@ namespace OthelloProject.Models
 			}
 		}
 
-		public int GetWinningStats(int userID, out int totalGames, out int gamesWon, out string message)
+		public UserDetails? GetUserByEmail(string email, out string message)
+		{
+			message = "";
+			using SqlConnection conn = Connect();
+			string sqlQuery = "SELECT TOP 1 * FROM [User] WHERE [Email] = @Email";
+			using SqlCommand cmd = new SqlCommand(sqlQuery, conn);
+			cmd.Parameters.AddWithValue("@Email", email);
+
+			try
 			{
-				message = "";
-				totalGames = 0;
-				gamesWon = 0;
-
-				SqlConnection conn = Connect();
-
-				string sqlQuery = "SELECT COUNT(*) AS TotalGames, SUM(CASE WHEN (WinnerID = @UserID) THEN 1 ELSE 0 END) AS GamesWon FROM [Game] WHERE User1ID = @UserID OR User2ID = @UserID";
-				SqlCommand cmd = new SqlCommand(sqlQuery, conn);
-				cmd.Parameters.AddWithValue("@UserID", userID);
-
-				try
+				conn.Open();
+				using SqlDataReader reader = cmd.ExecuteReader();
+				if (reader.Read())
 				{
-					conn.Open();
-					SqlDataReader reader = cmd.ExecuteReader();
-
-					if (reader.Read())
+					return new UserDetails
 					{
-						totalGames = reader["TotalGames"] != DBNull.Value ? Convert.ToInt32(reader["TotalGames"]) : 0;
-						gamesWon = reader["GamesWon"] != DBNull.Value ? Convert.ToInt32(reader["GamesWon"]) : 0;
-					}
-
-					return 1; // Success
+						UserID = (int)reader["UserID"],
+						Username = reader["Username"].ToString(),
+						Email = reader["Email"].ToString(),
+						Password = reader["Password"].ToString()
+					};
 				}
-				catch (Exception ex)
-				{
-					message = ex.Message;
-					return 0; // Failure
-				}
-				finally
-				{
-					conn.Close();
-				}
+				return null;
 			}
+			catch (Exception ex)
+			{
+				message = ex.Message;
+				return null;
+			}
+		}
+
+		public int GetWinningStats(int userID, out int totalGames, out int gamesWon, out string message) {
+			message = "";
+			totalGames = 0;
+			gamesWon = 0;
+			SqlConnection conn = Connect();
+			string sqlQuery = "SELECT COUNT(*) AS TotalGames, SUM(CASE WHEN (WinnerID = @UserID) THEN 1 ELSE 0 END) AS GamesWon FROM [Game] WHERE User1ID = @UserID OR User2ID = @UserID";
+			SqlCommand cmd = new SqlCommand(sqlQuery, conn);
+			cmd.Parameters.AddWithValue("@UserID", userID);
+			try
+			{
+				conn.Open();
+				SqlDataReader reader = cmd.ExecuteReader();
+				if (reader.Read())
+				{
+					totalGames = reader["TotalGames"] != DBNull.Value ? Convert.ToInt32(reader["TotalGames"]) : 0;
+					gamesWon = reader["GamesWon"] != DBNull.Value ? Convert.ToInt32(reader["GamesWon"]) : 0;
+				}
+				return 1; // Success
+			}
+			catch (Exception ex)
+			{
+				message = ex.Message;
+				return 0; // Failure
+			}
+			finally
+			{
+				conn.Close();
+			}
+		}
+
+		public int UpdateUserProfile(int userId, string username, string email, out string message)
+		{
+			message = "";
+			using SqlConnection conn = Connect();
+			string sql = "UPDATE [User] SET Username = @Username, Email = @Email WHERE UserID = @UserID";
+			using SqlCommand cmd = new SqlCommand(sql, conn);
+			cmd.Parameters.AddWithValue("@Username", username);
+			cmd.Parameters.AddWithValue("@Email", email);
+			cmd.Parameters.AddWithValue("@UserID", userId);
+
+			try
+			{
+				conn.Open();
+				int rows = cmd.ExecuteNonQuery();
+				if (rows != 1) message = "Ingen rad uppdaterades.";
+				return rows;
+			}
+			catch (Exception ex)
+			{
+				message = ex.Message;
+				return 0;
+			}
+		}
+
+		public int UpdatePasswordById(int userId, string rawPassword, out string message)
+		{
+			message = "";
+			var hasher = new PasswordHasher<UserDetails>();
+			var ud = new UserDetails { UserID = userId };
+			string hashed = hasher.HashPassword(ud, rawPassword);
+
+			using SqlConnection conn = Connect();
+			string sql = "UPDATE [User] SET [Password] = @Password WHERE UserID = @UserID";
+			using SqlCommand cmd = new SqlCommand(sql, conn);
+			cmd.Parameters.AddWithValue("@Password", hashed);
+			cmd.Parameters.AddWithValue("@UserID", userId);
+
+			try
+			{
+				conn.Open();
+				int rows = cmd.ExecuteNonQuery();
+				if (rows != 1) message = "Ingen rad uppdaterades.";
+				return rows;
+			}
+			catch (Exception ex)
+			{
+				message = ex.Message;
+				return 0;
+			}
+		}
+
 	}
 }
