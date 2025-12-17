@@ -1,94 +1,15 @@
 @model int[,]
-@{
-	ViewData["Title"] = "Othello Board";
-	string player2Name = ViewBag.User2Name ?? "Waiting for Player 2";
-	int player2points = ViewBag.Player2Points ?? "0";
-	int player1points = ViewBag.Player1Points ?? "0";
-	string winner = ViewBag.Winner ?? null;
-	bool leftUser = ViewBag.leftUser ?? false;
-	int playerTurn = Context.Session.GetInt32("CurrentPlayer") ?? 0;
-	bool isPlayer1Turn = ((int?)ViewBag.CurrentPlayer) == 1;
-	bool isPlayer2Turn = ((int?)ViewBag.CurrentPlayer) == 2;
-}
 
-@if (leftUser == true)
-{
-	<div class="leftTheGame-container">
-		<h2>Opponent left the game</h2>
-	</div>
 
-}
-<div class="othello-form othello-board-card fra-border">
-	<div class="othello-wrapper board-wrapper">
-		<div class="board-players">
-			@{
-				var player1Class = $"othello-player-label othello-player1 {(isPlayer1Turn ? "player-box-active" : "")}";
-				var player2Base = ViewBag.User2Name == null
-				? "othello-player-label othello-player-waiting othello-player2"
-				: "othello-player-label othello-player2";
-				var player2Css = $"{player2Base} {(isPlayer2Turn ? "player-box-active" : "")}";
-			}
-			<p class="mb-0 @player1Class">Player 1: @ViewBag.User1Name</p>
-			<p class="mb-0 @player2Css">Player 2: @player2Name</p>
-		</div>
-		<div class="board-players2">
-			<p>Points: @player1points</p>
-			@if (winner != null)
-			{
-				<h3>Winner: @winner</h3>
-			}
-			<p>Points: @player2points</p>
-
-		</div>
-
-		<!-- Form posts which position the user clicked -->
-		<div class="othello-board">
-			@for (int row = 0; row < 8; row++)
-			{
-				for (int col = 0; col < 8; col++)
-				{
-					var index = row * 8 + col;
-					var cell = @Model[row, col];
-
-					<div class="othello-cell">
-						@if (cell == 0 && playerTurn == ViewBag.CurrentPlayer && player2Name != "Waiting for Player 2" && winner
-										!= null)
-						{
-							<form method="post" asp-controller="Games" asp-action="makeMove">
-								<input type="hidden" name="row" value="@row" />
-								<input type="hidden" name="col" value="@col" />
-								<input type="hidden" name="currentplayer" value="@ViewBag.CurrentPlayer" />
-								<button type="submit" class="othello-cell-button"></button>
-							</form>
-						}
-						else if (cell == 2)
-						{
-							<!-- White piece -->
-							<div class="othello-piece white"></div>
-						}
-						else if (cell == 1)
-						{
-							<!-- Black piece -->
-							<div class="othello-piece black"></div>
-						}
-					</div>
-				}
-			}
-		</div>
-		<div style="margin-top: 1.5rem;">
-			@if (winner != null)
-			{
-				<form asp-controller="Games" asp-action="FinishedGame" method="post">
-					@Html.AntiForgeryToken()
-					<button class="othello-btn" type="submit">Continue</button>
-				</form>
-			}
-		</div>
-
-	</div>
+<div class="othello-form othello-board-card fra-border" id="othelloGameBoardContainer" >
+	@await Html.PartialAsync(partialViewName: "OthelloGameBoard", Model)
 </div>
 
 <form asp-controller="Games" asp-action="LeaveGame" method="post" class="othello-leave-form">
 	@Html.AntiForgeryToken()
 	<button type="submit" class="othello-leave-btn">Leave Game</button>
 </form>
+
+@section Scripts{
+	<script src="~/js/othelloGameBoard.js"></script>
+}
