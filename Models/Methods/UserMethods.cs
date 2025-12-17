@@ -95,8 +95,10 @@ namespace OthelloProject.Models
 				while (reader.Read())
 				{
 					ud.Username = reader["Username"].ToString();
-					if (reader["UserID"] != DBNull.Value){
-					ud.UserID = (int)reader["UserID"];
+					ud.Email = reader["Email"].ToString();
+					if (reader["UserID"] != DBNull.Value)
+					{
+						ud.UserID = (int)reader["UserID"];
 					}
 				}
 
@@ -379,7 +381,8 @@ namespace OthelloProject.Models
 			}
 		}
 
-		public int GetWinningStats(int userID, out int totalGames, out int gamesWon, out string message) {
+		public int GetWinningStats(int userID, out int totalGames, out int gamesWon, out string message)
+		{
 			message = "";
 			totalGames = 0;
 			gamesWon = 0;

@@ -224,11 +224,10 @@ namespace OthelloProject
 		public IActionResult makeMove(int row, int col, int currentplayer)
 		{
 			GameMethods gm = new GameMethods();
-			GameDetails gd = new GameDetails();
 			OthelloLogic gameLogic = new OthelloLogic();
 
 			string currentGame = HttpContext.Session.GetString("GameName") ?? "";
-			gd = gm.GetGameByName(currentGame, out string message1);
+			GameDetails gd = gm.GetGameByName(currentGame, out string message1);
 
 			string currentBoard = gm.GetBoard(gd, out string message2);
 			int[,] newBoard = new ConverterMethods().ConvertBoardStringToArray(currentBoard);

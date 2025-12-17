@@ -58,8 +58,7 @@ namespace OthelloProject.Controllers
 		[HttpPost]
 		public IActionResult Login(UserDetails ud)
 		{
-			var uMethod = new UserMethods();
-			UserDetails retrievedUser = uMethod.VerifyLogin(ud.Username!, out string errormsg);
+			UserDetails? retrievedUser = new UserMethods().VerifyLogin(ud.Username!, out string errormsg);
 
 			if (retrievedUser != null)
 			{
