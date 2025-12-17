@@ -3,3 +3,6 @@ obj/
 
 # Ignore bin
 bin/
+
+#ignor json
+.json
