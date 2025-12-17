@@ -97,7 +97,6 @@ namespace OthelloProject.Models
 
 				}
 			}
-
 			return false;
 
 		}

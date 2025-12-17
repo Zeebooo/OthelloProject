@@ -9,3 +9,4 @@ function updateGameList() {
         })
         .catch(err => console.error(err));
 }
+setInterval(updateGameList, 2000);

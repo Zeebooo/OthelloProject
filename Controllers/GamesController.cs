@@ -59,7 +59,7 @@ namespace OthelloProject
 				if (result == 1)
 				{
 					HttpContext.Session.SetString("GameName", newGame.GameName);
-					HttpContext.Session.SetInt32("CurrentPlayer", 1);
+					HttpContext.Session.SetInt32("PlayerNumber", 1);
 					return RedirectToAction("OthelloBoard");
 				}
 				else
@@ -74,18 +74,31 @@ namespace OthelloProject
 		{
 			string gameName = HttpContext.Session.GetString("GameName") ?? "";
 			GameDetails initiatedGame = new GameMethods().GetGameByName(gameName, out string message);
+
+			string boardString = initiatedGame.Board;
+			int[,] boardArray = new ConverterMethods().ConvertBoardStringToArray(boardString);
+
+			return View(model: boardArray);
+		}
+
+		public IActionResult OthelloGameBoard()
+		{
+			string gameName = HttpContext.Session.GetString("GameName") ?? "";
+			GameDetails initiatedGame = new GameMethods().GetGameByName(gameName, out string message);
 			var userMethods = new UserMethods();
 
 			var user1Name = userMethods.GetUserInfoByID(initiatedGame.User1ID, out string msg1);
 			var user2Name = userMethods.GetUserInfoByID(initiatedGame.User2ID, out string msg2);
-			ViewBag.User1Name = user1Name.Username;
+			HttpContext.Session.SetString("User1Name", user1Name.Username);
+			HttpContext.Session.SetString("User2Name", user2Name.Username);
+
 			if (user2Name != null)
 			{
 				ViewBag.User2Name = user2Name.Username;
 			}
 
 			int currentPlayer = new GameMethods().GetCurrentPlayer(initiatedGame, out string msg3);
-			ViewBag.CurrentPlayer = currentPlayer;
+			HttpContext.Session.SetInt32("CurrentPlayer", currentPlayer);
 			List<(int row, int col)> validMoves = new OthelloLogic().GetValidMoves(initiatedGame, currentPlayer);
 
 			var cm = new ConverterMethods();
@@ -101,43 +114,43 @@ namespace OthelloProject
 				{
 					if (boardArray[row, col] == 1)
 					{
-						player2Points++;
+						player1Points++;
 					}
 					else if (boardArray[row, col] == 2)
 					{
-						player1Points++;
+						player2Points++;
 					}
 				}
 			}
 			
-			ViewBag.Player2Points = player2Points;
-			ViewBag.Player1Points = player1Points;
+			HttpContext.Session.SetInt32("Player2Points", player2Points);
+			HttpContext.Session.SetInt32("Player1Points", player1Points);
 
 			if (validMoves.IsNullOrEmpty())
 			{
-				if (player1Points > player2Points)
+				if (player2Points > player1Points)
 				{
-					initiatedGame.WinnerID = initiatedGame.User1ID;
+					initiatedGame.WinnerID = initiatedGame.User2ID;
 					initiatedGame.GameStatus = "Finished";
 					int successWinnerID = new GameMethods().UpdateGameWinnerID(initiatedGame, out string message2);
 					int successStatus = new GameMethods().UpdateGameStatus(initiatedGame.GameID, out string message3);
 					Console.WriteLine("Winner is: " + user2Name.Username);
+					HttpContext.Session.SetString("Winner", user2Name.Username);
 				}
-				else if (player2Points > player1Points)
+				else if (player1Points > player2Points)
 				{
-					initiatedGame.WinnerID = initiatedGame.User2ID;
+					initiatedGame.WinnerID = initiatedGame.User1ID;
 					initiatedGame.GameStatus = "Finished";
 					int successWinnerID = new GameMethods().UpdateGameWinnerID(initiatedGame, out string messge4);
 					int successStatus = new GameMethods().UpdateGameStatus(initiatedGame.GameID, out string message5);
 					Console.WriteLine("Winner is: " + user1Name.Username);
+					HttpContext.Session.SetString("Winner", user1Name.Username);
 				}
-
-				return View(model: boardArray);
+				return PartialView("OthelloGameBoard", boardArray);
 			}
 
 
-
-			return View(model: boardArray);
+			return PartialView("OthelloGameBoard", boardArray);
 		}
 
 		public IActionResult JoinGame(GameDetails gd)
@@ -152,7 +165,7 @@ namespace OthelloProject
 
 			if (currentStatus == 1 && updateUser2 == 1)
 			{
-				HttpContext.Session.SetInt32("CurrentPlayer", 2);
+				HttpContext.Session.SetInt32("PlayerNumber", 2);
 				return RedirectToAction("OthelloBoard");
 			}
 			else
@@ -207,6 +220,7 @@ namespace OthelloProject
 
 			if (success == false)
 			{
+				Console.WriteLine("d funka inte");
 				return RedirectToAction("OthelloBoard");
 			}
 			else if (success == true)

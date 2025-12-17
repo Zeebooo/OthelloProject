@@ -1,0 +1,81 @@
+@model int[,]
+@{
+    int? player2points = Context.Session.GetInt32("Player2Points");
+    int? player1points = Context.Session.GetInt32("Player1Points");
+    int playerTurn = Context.Session.GetInt32("PlayerNumber") ?? 0;
+    int? currentPlayer = Context.Session.GetInt32("CurrentPlayer");
+    bool isPlayer1Turn = false;
+    bool isPlayer2Turn = false;
+    string? winner = Context.Session.GetString("Winner");
+    @if (currentPlayer == 1)
+    {
+        isPlayer1Turn = true;
+        isPlayer2Turn = false;
+    }
+    else if (currentPlayer == 2)
+    {
+        isPlayer1Turn = false;
+        isPlayer2Turn = true;
+    }
+    string? User1Name = Context.Session.GetString("User1Name");
+    string? User2Name = Context.Session.GetString("User2Name") ?? "Waiting for Player 2";
+}
+
+<div class="othello-wrapper board-wrapper">
+    <div class="board-players">
+        @{
+            var player1Class = $"othello-player-label othello-player1 {(isPlayer1Turn ? "player-box-active" : "")}";
+            var player2Base = User2Name == null
+                     ? "othello-player-label othello-player-waiting othello-player2"
+                     : "othello-player-label othello-player2";
+            var player2Css = $"{player2Base} {(isPlayer2Turn ? "player-box-active" : "")}";
+        }
+        <p class="mb-0 @player1Class">Player 1: @User1Name</p>
+        <p class="mb-0 @player2Css">Player 2: @User2Name</p>
+    </div>
+    <div class="board-players2">
+        <p>Points: @player1points</p>
+        @if (winner != null)
+        {
+            <h3>Winner: @winner</h3>
+        }
+        <p>Points: @player2points</p>
+    </div>
+
+    <!-- Form posts which position the user clicked -->
+    <div class="othello-board">
+        @for (int row = 0; row < 8; row++)
+        {
+            for (int col = 0; col < 8; col++)
+            {
+                var index = row * 8 + col;
+                var cell = @Model[row, col];
+
+                <div class="othello-cell">
+                    @if (cell == 0 && playerTurn == currentPlayer)
+                    {
+                        <form method="post" asp-controller="Games" asp-action="makeMove">
+                            <input type="hidden" name="row" value="@row" />
+                            <input type="hidden" name="col" value="@col" />
+                            <input type="hidden" name="currentplayer" value="@currentPlayer" />
+                            <button type="submit" class="othello-cell-button"></button>
+                        </form>
+                    }
+                    else if (cell == 2)
+                    {
+                        <!-- White piece -->
+                        <div class="othello-piece white"></div>
+                    }
+                    else if (cell == 1)
+                    {
+                        <!-- Black piece -->
+                        <div class="othello-piece black"></div>
+                    }
+                </div>
+            }
+        }
+    </div>
+
+
+</div>
+</div>

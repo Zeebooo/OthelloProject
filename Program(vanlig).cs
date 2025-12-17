@@ -46,11 +46,18 @@ app.Use(async (context, next) =>
 			path.StartsWithSegments("/othelloproject.styles.css", StringComparison.OrdinalIgnoreCase)
 		);
 
-	if (!isAuthenticated && allowAnonymous is null && !isPublicPath)
-	{
-		context.Response.Redirect("/User/Login");
-		return;
-	}
+// Om endpoint inte är resolved ännu → låt requesten passera
+if (endpoint == null)
+{
+    await next();
+    return;
+}
+
+if (!isAuthenticated && allowAnonymous is null && !isPublicPath)
+{
+    context.Response.Redirect("/User/Login");
+    return;
+}
 
 	await next();
 });
@@ -69,6 +76,7 @@ app.Use(async (context, next) =>
 	var path = context.Request.Path;
 	var allowedPath =
 		path.StartsWithSegments("/games/othelloboard", StringComparison.OrdinalIgnoreCase) ||
+		path.StartsWithSegments("/games/othellogameboard", StringComparison.OrdinalIgnoreCase) ||
 		path.StartsWithSegments("/games/makemove", StringComparison.OrdinalIgnoreCase) ||
 		path.StartsWithSegments("/games/leavegame", StringComparison.OrdinalIgnoreCase) ||
 		path.StartsWithSegments("/css", StringComparison.OrdinalIgnoreCase) ||
