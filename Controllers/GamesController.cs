@@ -39,6 +39,7 @@ namespace OthelloProject
 		[ValidateAntiForgeryToken]
 		public IActionResult FinishedGame()
 		{
+			Console.WriteLine("hej");
 			HttpContext.Session.Remove("GameName");
 			return RedirectToAction("Games", "Games");
 		}
@@ -135,6 +136,7 @@ namespace OthelloProject
 
 			if (initiatedGame.WinnerID != null)
 			{
+				Console.WriteLine("OMG");
 				HttpContext.Session.SetInt32("leftPlayer", initiatedGame.WinnerID ?? 0);
 				return PartialView("OthelloGameBoard", boardArray);
 			}

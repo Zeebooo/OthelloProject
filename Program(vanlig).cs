@@ -84,7 +84,7 @@ app.Use(async (context, next) =>
 		path.StartsWithSegments("/lib", StringComparison.OrdinalIgnoreCase) ||
 		path.StartsWithSegments("/images", StringComparison.OrdinalIgnoreCase) ||
 		path.StartsWithSegments("/othelloproject.styles.css", StringComparison.OrdinalIgnoreCase)||
-		path.StartsWithSegments("/games/finishedgame", StringComparison.OrdinalIgnoreCase);
+		path.StartsWithSegments("/games/FinishedGame", StringComparison.OrdinalIgnoreCase);
 
 	if (!allowedPath)
 	{

@@ -4,7 +4,7 @@
 	int? player1points = Context.Session.GetInt32("Player1Points");
 	int playerTurn = Context.Session.GetInt32("PlayerNumber") ?? 0;
 	int? currentPlayer = Context.Session.GetInt32("CurrentPlayer");
-	int? leftPlayer = Context.Session.GetInt32("leftPlayer");
+	int? leftPlayer = Context.Session.GetInt32("leftPlayer") ?? null;
 	bool isPlayer1Turn = false;
 	bool isPlayer2Turn = false;
 	string? winner = Context.Session.GetString("Winner");
@@ -22,7 +22,7 @@
 	string? User2Name = Context.Session.GetString("User2Name") ?? "Waiting for Player 2";
 }
 
-@if (leftPlayer != 0)
+@if (leftPlayer != null)
 {
 	<div class="leftTheGame-container">
 		<h2>Opponent has left the game</h2>
@@ -82,7 +82,11 @@
 				</div>
 			}
 		}
+
 	</div>
+	<a class="othello-btn" style="margin-top:1.5rem" asp-controller="Games" asp-action="FinishedGame">
+		Continue
+	</a>
 	<form asp-controller="Games" asp-action="LeaveGame" method="post" class="othello-leave-form">
 		@Html.AntiForgeryToken()
 		<button type="submit" class="othello-leave-btn">Leave Game</button>
