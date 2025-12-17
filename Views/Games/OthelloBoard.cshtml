@@ -28,17 +28,16 @@
 				: "othello-player-label othello-player2";
 				var player2Css = $"{player2Base} {(isPlayer2Turn ? "player-box-active" : "")}";
 			}
-			<p class="mb-0 @player1Class">Player 1: @ViewBag.User1Name</p>
-			<p class="mb-0 @player2Css">Player 2: @player2Name</p>
-		</div>
-		<div class="board-players2">
-			<p>Points: @player1points</p>
-			@if (winner != null)
-			{
-				<h3>Winner: @winner</h3>
-			}
-			<p>Points: @player2points</p>
-
+			<p class="mb-0 @player1Class">
+				<span class="player-name">@ViewBag.User1Name</span>
+				<span class="player-separator">|</span>
+				<span class="player-points-inline">Pts: @player1points</span>
+			</p>
+			<p class="mb-0 @player2Css">
+				<span class="player-name">@player2Name</span>
+				<span class="player-separator">|</span>
+				<span class="player-points-inline">Pts: @player2points</span>
+			</p>
 		</div>
 
 		<!-- Form posts which position the user clicked -->
