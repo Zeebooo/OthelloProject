@@ -125,6 +125,10 @@ namespace OthelloProject.Models
 					{
 						gd.User2ID = (int)reader["User2ID"];
 					}
+					if(reader["WinnerID"] != DBNull.Value)
+					{
+						gd.WinnerID = (int)reader["WinnerID"];
+					}
 				}
 				return gd;
 			}
@@ -335,18 +339,17 @@ namespace OthelloProject.Models
 			}
 		}
 
-		public int UpdateGameStatus(int gameID, out string message)
+		public int UpdateGameStatus(GameDetails gd, out string message)
 		{
 			message = "";
 
 			SqlConnection conn = Connect();
 
 			string sqlQuery = "UPDATE [Game] SET [GameStatus] = @GameStatus WHERE [GameID] = @GameID";
-			string status = "Playing";
 			SqlCommand cmd = new SqlCommand(sqlQuery, conn);
 
-			cmd.Parameters.AddWithValue("@GameStatus", status);
-			cmd.Parameters.AddWithValue("@GameID", gameID);
+			cmd.Parameters.AddWithValue("@GameStatus", gd.GameStatus);
+			cmd.Parameters.AddWithValue("@GameID", gd.GameID);
 
 			try
 			{

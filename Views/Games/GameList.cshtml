@@ -11,21 +11,25 @@
 	@foreach (GameDetails availableGames in Model)
 	{
 		<tr class="othello-input">
-			<td class="text-center">@availableGames.GameName</td>
-			<td class="text-center">@availableGames.GameStatus</td>
-			<td class="text-center" style="white-space: nowrap;">
-				@if (availableGames.GameStatus == "Waiting")
-				{
-					<a type="submit" class="othello-nav-link" asp-controller="Games" asp-action="JoinGame"
-						asp-route-GameID="@availableGames.GameID">
-						Join game
-					</a>
-				}
-				else
-				{
-					<span>Game in progress</span>
-				}
-			</td>
+			@if (availableGames.GameStatus != "Finished")
+			{
+				<td class="text-center">@availableGames.GameName</td>
+				<td class="text-center">@availableGames.GameStatus</td>
+				<td class="text-center" style="white-space: nowrap;">
+					@if (availableGames.GameStatus == "Waiting")
+					{
+						<a type="submit" class="othello-nav-link" asp-controller="Games" asp-action="JoinGame"
+							asp-route-GameID="@availableGames.GameID">
+							Join game
+						</a>
+					}
+					else
+					{
+						<span>Game in progress</span>
+					}
+				</td>
+			}
+
 		</tr>
 	}
 </table>
