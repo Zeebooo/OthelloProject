@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using OthelloProject.Models.Methods
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -16,9 +17,26 @@
     var isLoggedIn = Context?.Session?.GetInt32("UserID") != null;
     var inGame = !string.IsNullOrEmpty(Context?.Session?.GetString("GameName"));
     var isBoardPage = Context?.Request?.Path.StartsWithSegments("/games/othelloboard", StringComparison.OrdinalIgnoreCase) == true;
+
     double? navWinRate = ViewBag.NavWinRate as double?;
-    var navWinRatePct = navWinRate.HasValue ? (int)(navWinRate.Value * 100) : (int?)null;
     bool showWinRate = ViewBag.NavShowWinRate ?? true;
+
+    // Fallback: hämta winrate om den inte redan finns i ViewBag
+    if (navWinRate == null && isLoggedIn)
+    {
+        var userId = Context?.Session?.GetInt32("UserID");
+        if (userId.HasValue)
+        {
+            var um = new UserMethods();
+            int totalGames, gamesWon;
+            if (um.GetWinningStats(userId.Value, out totalGames, out gamesWon, out var statsMsg) == 1 && totalGames > 0)
+            {
+                navWinRate = (double)gamesWon / totalGames;
+            }
+        }
+    }
+
+    var navWinRatePct = navWinRate.HasValue ? (int)(navWinRate.Value * 100) : (int?)null;
     string navWrClass = "wr-na";
     if (navWinRatePct.HasValue)
     {
