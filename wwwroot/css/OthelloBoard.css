@@ -279,3 +279,17 @@
         0 3px 0 #7f1919,
         0 8px 12px rgba(0,0,0,0.3);
 }
+
+.leftTheGame-container {
+	position: fixed;
+	z-index: 100;
+	top:50%;
+	box-sizing: border-box;
+	margin-left: 28%;
+}
+
+.leftTheGame-container > h2 {
+	color: lightcoral;
+	text-align:center;
+    text-shadow: 5px 5px 5px black;
+}

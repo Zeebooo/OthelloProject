@@ -5,11 +5,19 @@
 	int player2points = ViewBag.Player2Points ?? "0";
 	int player1points = ViewBag.Player1Points ?? "0";
 	string winner = ViewBag.Winner ?? null;
+	bool leftUser = ViewBag.leftUser ?? false;
 	int playerTurn = Context.Session.GetInt32("CurrentPlayer") ?? 0;
 	bool isPlayer1Turn = ((int?)ViewBag.CurrentPlayer) == 1;
 	bool isPlayer2Turn = ((int?)ViewBag.CurrentPlayer) == 2;
 }
 
+@if (leftUser == true)
+{
+	<div class="leftTheGame-container">
+		<h2>Opponent left the game</h2>
+	</div>
+
+}
 <div class="othello-form othello-board-card fra-border">
 	<div class="othello-wrapper board-wrapper">
 		<div class="board-players">
@@ -43,7 +51,8 @@
 					var cell = @Model[row, col];
 
 					<div class="othello-cell">
-						@if (cell == 0 && playerTurn == ViewBag.CurrentPlayer && player2Name != "Waiting for Player 2")
+						@if (cell == 0 && playerTurn == ViewBag.CurrentPlayer && player2Name != "Waiting for Player 2" && winner
+										!= null)
 						{
 							<form method="post" asp-controller="Games" asp-action="makeMove">
 								<input type="hidden" name="row" value="@row" />
