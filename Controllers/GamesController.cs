@@ -43,6 +43,10 @@ namespace OthelloProject
 			HttpContext.Session.Remove("GameName");
 			HttpContext.Session.Remove("leftPlayer");
 			HttpContext.Session.Remove("Winner");
+			HttpContext.Session.Remove("Player1Points");
+			HttpContext.Session.Remove("Player2Points");
+			HttpContext.Session.Remove("CurrentPlayer");
+			HttpContext.Session.Remove("PlayerNumber");
 			return RedirectToAction("Games", "Games");
 		}
 
@@ -57,6 +61,14 @@ namespace OthelloProject
 		[HttpPost]
 		public IActionResult AddGame(GameDetails newGame)
 		{
+			// reset lingering game session
+			HttpContext.Session.Remove("Winner");
+			HttpContext.Session.Remove("Player1Points");
+			HttpContext.Session.Remove("Player2Points");
+			HttpContext.Session.Remove("CurrentPlayer");
+			HttpContext.Session.Remove("leftPlayer");
+			HttpContext.Session.Remove("PlayerNumber");
+
 			GameDetails gd = new GameMethods().GetGameByName(newGame.GameName, out string message1);
 			if (gd.GameName != null)
 			{
@@ -97,19 +109,25 @@ namespace OthelloProject
 		{
 			string gameName = HttpContext.Session.GetString("GameName") ?? "";
 			GameDetails initiatedGame = new GameMethods().GetGameByName(gameName, out string message);
-			Console.WriteLine("hur: " + initiatedGame.WinnerID);
 
 			var user1Name = new UserMethods().GetUserInfoByID(initiatedGame.User1ID, out string msg1);
 			var user2Name = new UserMethods().GetUserInfoByID(initiatedGame.User2ID, out string msg2);
-			HttpContext.Session.SetString("User1Name", user1Name.Username);
+			if (!string.IsNullOrEmpty(user1Name?.Username))
+			{
+				HttpContext.Session.SetString("User1Name", user1Name.Username);
+			}
 
 			if (user2Name != null)
 			{
-				HttpContext.Session.SetString("User2Name", user2Name.Username);
+				if (!string.IsNullOrEmpty(user2Name.Username))
+				{
+					HttpContext.Session.SetString("User2Name", user2Name.Username);
+				}
 			}
 
 			int currentPlayer = new GameMethods().GetCurrentPlayer(initiatedGame, out string msg3);
 			HttpContext.Session.SetInt32("CurrentPlayer", currentPlayer);
+			int otherPlayer = currentPlayer == 1 ? 2 : 1;
 
 			string boardString = initiatedGame.Board;
 			int[,] boardArray = new ConverterMethods().ConvertBoardStringToArray(boardString);
@@ -134,48 +152,71 @@ namespace OthelloProject
 
 			HttpContext.Session.SetInt32("Player2Points", player2Points);
 			HttpContext.Session.SetInt32("Player1Points", player1Points);
+			List<(int row, int col)> currentPlayerMoves = new OthelloLogic().GetValidMoves(initiatedGame, currentPlayer);
+			List<(int row, int col)> otherPlayerMoves = new OthelloLogic().GetValidMoves(initiatedGame, otherPlayer);
 
+			if (initiatedGame.WinnerID != null)
+			{
+				var winnerName = initiatedGame.WinnerID == initiatedGame.User1ID ? user1Name?.Username : user2Name?.Username;
+				if (!string.IsNullOrEmpty(winnerName))
+				{
+					HttpContext.Session.SetString("Winner", winnerName);
+				}
+				return PartialView("OthelloGameBoard", boardArray);
+			}
 
-
-			List<(int row, int col)> validMoves = new OthelloLogic().GetValidMoves(initiatedGame, currentPlayer);
-
-			if (validMoves.IsNullOrEmpty())
+			if (currentPlayerMoves.IsNullOrEmpty() && !otherPlayerMoves.IsNullOrEmpty())
+			{
+				initiatedGame.CurrentPlayer = otherPlayer;
+				new GameMethods().UpdateCurrentPlayer(initiatedGame, out string _);
+				HttpContext.Session.SetInt32("CurrentPlayer", otherPlayer);
+			}
+			else if (currentPlayerMoves.IsNullOrEmpty() && otherPlayerMoves.IsNullOrEmpty())
 			{
 				if (player2Points > player1Points)
 				{
 					initiatedGame.WinnerID = initiatedGame.User2ID;
 					initiatedGame.GameStatus = "Finished";
-					int successWinnerID = new GameMethods().UpdateGameWinnerID(initiatedGame, out string message2);
-					int successStatus = new GameMethods().UpdateGameStatus(initiatedGame, out string message3);
-					Console.WriteLine("Winner is: " + user2Name.Username);
-					HttpContext.Session.SetString("Winner", user2Name.Username);
+					int successWinnerID = new GameMethods().UpdateGameWinnerID(initiatedGame, out string _);
+					int successStatus = new GameMethods().UpdateGameStatus(initiatedGame, out string _);
+					if (successWinnerID == 1 && successStatus == 1 && user2Name != null)
+					{
+						HttpContext.Session.SetString("Winner", user2Name.Username);
+					}
 				}
 				else if (player1Points > player2Points)
 				{
 					initiatedGame.WinnerID = initiatedGame.User1ID;
 					initiatedGame.GameStatus = "Finished";
-					int successWinnerID = new GameMethods().UpdateGameWinnerID(initiatedGame, out string messge4);
-					int successStatus = new GameMethods().UpdateGameStatus(initiatedGame, out string message5);
-					Console.WriteLine("Winner is: " + user1Name.Username);
-					HttpContext.Session.SetString("Winner", user1Name.Username);
+					int successWinnerID = new GameMethods().UpdateGameWinnerID(initiatedGame, out string _);
+					int successStatus = new GameMethods().UpdateGameStatus(initiatedGame, out string _);
+					if (successWinnerID == 1 && successStatus == 1 && user1Name != null)
+					{
+						HttpContext.Session.SetString("Winner", user1Name.Username);
+					}
+				}
+				else
+				{
+					initiatedGame.GameStatus = "Finished";
+					new GameMethods().UpdateGameStatus(initiatedGame, out string _);
+					HttpContext.Session.SetString("Winner", "Draw");
 				}
 				return PartialView("OthelloGameBoard", boardArray);
 			}
-
-			if (initiatedGame.WinnerID != null)
-			{
-				HttpContext.Session.SetInt32("leftPlayer", 1);
-				string? winner = new UserMethods().GetUserInfoByID(initiatedGame.WinnerID, out string message10).Username;
-				HttpContext.Session.SetString("Winner", winner);
-				return PartialView("OthelloGameBoard", boardArray);
-			}
-
 
 			return PartialView("OthelloGameBoard", boardArray);
 		}
 
 		public IActionResult JoinGame(GameDetails gd)
 		{
+			// reset lingering game session
+			HttpContext.Session.Remove("Winner");
+			HttpContext.Session.Remove("Player1Points");
+			HttpContext.Session.Remove("Player2Points");
+			HttpContext.Session.Remove("CurrentPlayer");
+			HttpContext.Session.Remove("leftPlayer");
+			HttpContext.Session.Remove("PlayerNumber");
+
 			gd.GameName = new GameMethods().GetGameInfoByID(gd.GameID, out string message).GameName;
 			gd.User2ID = (int)HttpContext.Session.GetInt32("UserID");
 			gd.GameStatus = "Playing";
