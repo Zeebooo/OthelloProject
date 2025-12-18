@@ -42,6 +42,7 @@ namespace OthelloProject
 		{
 			HttpContext.Session.Remove("GameName");
 			HttpContext.Session.Remove("leftPlayer");
+			HttpContext.Session.Remove("Winner");
 			return RedirectToAction("Games", "Games");
 		}
 
@@ -96,6 +97,7 @@ namespace OthelloProject
 		{
 			string gameName = HttpContext.Session.GetString("GameName") ?? "";
 			GameDetails initiatedGame = new GameMethods().GetGameByName(gameName, out string message);
+			Console.WriteLine("hur: " + initiatedGame.WinnerID);
 
 			var user1Name = new UserMethods().GetUserInfoByID(initiatedGame.User1ID, out string msg1);
 			var user2Name = new UserMethods().GetUserInfoByID(initiatedGame.User2ID, out string msg2);
@@ -122,11 +124,9 @@ namespace OthelloProject
 					if (boardArray[row, col] == 1)
 					{
 						player1Points++;
-						player1Points++;
 					}
 					else if (boardArray[row, col] == 2)
 					{
-						player2Points++;
 						player2Points++;
 					}
 				}
@@ -164,8 +164,9 @@ namespace OthelloProject
 
 			if (initiatedGame.WinnerID != null)
 			{
-				Console.WriteLine("Winner: " + initiatedGame.WinnerID);
-				HttpContext.Session.SetInt32("leftPlayer", initiatedGame.WinnerID ?? 0);
+				HttpContext.Session.SetInt32("leftPlayer", 1);
+				string? winner = new UserMethods().GetUserInfoByID(initiatedGame.WinnerID, out string message10).Username;
+				HttpContext.Session.SetString("Winner", winner);
 				return PartialView("OthelloGameBoard", boardArray);
 			}
 
@@ -212,6 +213,7 @@ namespace OthelloProject
 		public IActionResult LeaveGame()
 		{
 			var gameName = HttpContext.Session.GetString("GameName");
+			Console.WriteLine(gameName);
 			GameDetails gd = new GameMethods().GetGameByName(gameName, out string message);
 
 			if (!string.IsNullOrEmpty(gameName) && gd.User2ID == null)
@@ -224,6 +226,8 @@ namespace OthelloProject
 				gd.GameStatus = "Finished";
 				int updateWinner = new GameMethods().UpdateGameWinnerID(gd, out string message2);
 				int updateGameStatus = new GameMethods().UpdateGameStatus(gd, out string message3);
+				Console.WriteLine("hej");
+				Console.WriteLine(gd.WinnerID);
 			}
 			else if (HttpContext.Session.GetInt32("UserID") == gd.User2ID)
 			{
@@ -231,8 +235,10 @@ namespace OthelloProject
 				gd.GameStatus = "Finished";
 				int updateWinner = new GameMethods().UpdateGameWinnerID(gd, out string message2);
 				int updateGameStatus = new GameMethods().UpdateGameStatus(gd, out string message3);
+				Console.WriteLine("hallo");
 			}
 
+			HttpContext.Session.Remove("leftPlayer");
 			HttpContext.Session.Remove("GameName");
 			return RedirectToAction("Games");
 		}

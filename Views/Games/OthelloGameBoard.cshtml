@@ -7,7 +7,7 @@
 	int? leftPlayer = Context.Session.GetInt32("leftPlayer") ?? 0;
 	bool isPlayer1Turn = false;
 	bool isPlayer2Turn = false;
-	string? winner = Context.Session.GetString("Winner");
+	string? winner = Context.Session.GetString("Winner") ?? null;
 	@if (currentPlayer == 1)
 	{
 		isPlayer1Turn = true;
