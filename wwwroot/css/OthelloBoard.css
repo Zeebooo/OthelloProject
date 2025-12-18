@@ -101,7 +101,7 @@
 
 .othello-board-card {
     max-width: 600px;
-    padding: 0.5rem 1.5rem 3rem;
+    padding: 1rem 1.5rem 3rem;
     border-radius: 12px;
 }
 
@@ -117,8 +117,11 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 0.75rem;
-    width: 100%;
-    margin: 0.5rem 0 0.5rem;
+    width: min(80vmin, 480px);
+    max-width: 480px;
+    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .board-players2 {
@@ -128,16 +131,19 @@
     flex-wrap: wrap;
 	padding-left: 2rem;
 	padding-right: 2rem;
-    width: 100%;
-    margin: 0.5rem 0 0.5rem;
+    width: min(80vmin, 480px);
+    max-width: 480px;
+    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .othello-player-label {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.45rem 0.8rem;
-    border-radius: 14px;
+    gap: 0;
+    padding: 0.35rem 0.65rem;
+    border-radius: 12px;
     font-weight: 700;
     letter-spacing: 0.02em;
     color: #e7f6ef;
@@ -182,7 +188,9 @@
 }
 
 .player-points-inline {
-    font-size: 0.82rem;
+    font-size: 0.9rem;
+    opacity: 0.85;
+    margin: 0 0.2rem 0 0.3rem;
     color: rgba(231, 246, 239, 0.85);
 }
 
@@ -263,6 +271,27 @@
 
 .turn-inactive {
     color: #d36a6a;
+}
+
+.winner-full {
+    width: 100%;
+    justify-content: center;
+}
+
+.winner-flag {
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-right: 0.5rem;
+    color: #17b26f;
+    animation: winner-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes winner-pulse {
+    0% { transform: scale(1) rotate(0deg); }
+    30% { transform: scale(1.08) rotate(-1deg); }
+    60% { transform: scale(1.08) rotate(1deg); }
+    100% { transform: scale(1) rotate(0deg); }
 }
 
 .othello-leave-btn {

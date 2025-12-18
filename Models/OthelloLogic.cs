@@ -11,14 +11,14 @@ namespace OthelloProject.Models
 			return row <= 7 && col <= 7 && row >= 0 && col >= 0;
 		}
 
-		public int flipIfValid(int[,] board, int row, int col, int dirRow, int dirCol, int player, GameDetails gd)
+		public int flipIfValid(int[,] board, int row, int col, int dirRow, int dirCol, int player)
 		{
 			int nextRowInDir = row + dirRow;
 			int nextColInDir = col + dirCol;
 
 			if (!isInsideBoard(nextRowInDir, nextColInDir) || board[nextRowInDir, nextColInDir] == player)
 			{
-				return 0;
+				return 0; // no opponent piece adjacent
 			}
 
 			while (isInsideBoard(nextRowInDir, nextColInDir))
@@ -40,16 +40,7 @@ namespace OthelloProject.Models
 						flipCol += dirCol;
 					}
 
-					string newBoard = new ConverterMethods().ConvertBoardArrayToString(board);
-					gd.Board = newBoard;
-					int success = new GameMethods().UpdateBoard(gd, out string message);
-
-					if (success != 1)
-					{
-						return -1;
-
-					}
-					return 1;
+					return 1; // flipped in this direction
 				}
 
 				nextRowInDir += dirRow;
@@ -76,28 +67,23 @@ namespace OthelloProject.Models
 						continue;
 					}
 
-					flipped += flipIfValid(board, row, col, dirRow, dirCol, player, gd);
-
-					if (flipped == -1)
-					{
-						return false;
-					}
-
-					if (dirRow == 1 && dirCol == 1 && flipped != 0) // Här måste vi lägga ut nya pjäsen
-					{
-						string currentBoard = new GameMethods().GetBoard(gd, out string message); // Hämta flippade brädet (minus pjäsen vi lägger ut) från databasen
-						int[,] newBoard = new ConverterMethods().ConvertBoardStringToArray(currentBoard); // Gör om den till en array
-						newBoard[row, col] = player; // Lägg in pjäsen i nya arrayen
-						string updatedBoard = new ConverterMethods().ConvertBoardArrayToString(newBoard); // Gör om den till en string
-						gd.Board = updatedBoard; // Uppdatera GameDetails med nya brädet
-						int success = new GameMethods().UpdateBoard(gd, out string message2); // Uppdatera brädet i databasen
-
-						return true;
-					}
+					flipped += flipIfValid(board, row, col, dirRow, dirCol, player);
 
 				}
 			}
-			return false;
+
+			if (flipped <= 0)
+			{
+				return false; // no flips = invalid move
+			}
+
+			// Place the new piece and persist the updated board once
+			board[row, col] = player;
+			string updatedBoard = new ConverterMethods().ConvertBoardArrayToString(board);
+			gd.Board = updatedBoard;
+			int success = new GameMethods().UpdateBoard(gd, out string message2); // Uppdatera brädet i databasen
+
+			return success == 1;
 
 		}
 
