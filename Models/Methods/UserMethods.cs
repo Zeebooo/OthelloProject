@@ -9,7 +9,7 @@ namespace OthelloProject.Models
 	public class UserMethods
 	{
 
-		public UserMethods() { }
+		public UserMethods() { } // Tom konstruktor
 
 		public IConfigurationRoot GetConnection() // Metod för att hämta koppling till databasen
 		{
@@ -17,12 +17,17 @@ namespace OthelloProject.Models
 			return builder;
 		}
 
-		public SqlConnection Connect() // Hjälpfuntion
+		public SqlConnection Connect() // Hjälpfunktion
 		{
 			SqlConnection dbConnection = new SqlConnection(GetConnection().GetSection("ConnectionStrings").GetSection("DefaultConnection").Value);
 			return dbConnection;
 		}
 
+		/*	Namn: InsertUser
+			Tar in en UserDetails som innehåller all nödvändig
+			info om den nya användaren och sätter in det i 
+			databasen.
+		*/
 		public int InsertUser(UserDetails ud, out string message)
 		{
 			message = "";
@@ -75,6 +80,10 @@ namespace OthelloProject.Models
 			}
 		}
 
+		/*	Namn: GetUserInfoByID
+			Tar in en int som är ett UserID och hämtar all information (förutom lösenord)
+			relaterat till den användaren från databasen. 
+		*/
 		public UserDetails GetUserInfoByID(int? selectedUserID, out string message)
 		{
 			message = "";
@@ -115,6 +124,11 @@ namespace OthelloProject.Models
 			}
 		}
 
+		/*	Namn: VerifyLogin
+			Tar in en sträng som är ett användarnamn och hämtar allt utom email
+			relaterat till den användaren från databasen. Detta för att sedan
+			jämföras i controllern med det som skrevs in i inloggningssidan.	
+		*/
 		public UserDetails? VerifyLogin(string username, out string message)
 		{
 			message = "";
@@ -154,7 +168,10 @@ namespace OthelloProject.Models
 			}
 		}
 
-
+		/*	Namn: GetAllUsers
+			Tar inte in något, hämtar alla användare från databasen
+			och returnerar dem i en lista. 
+		*/
 		public List<UserDetails> GetAllUsers(out string message)
 		{
 			message = "";
@@ -199,16 +216,21 @@ namespace OthelloProject.Models
 			}
 		}
 
+		/*	Namn: UpdateUserName
+			Tar in en UserDetails som inparameter, denna innehåller ett nytt 
+			username. Uppdaterar sedan användarnamnet till rätt UserID.
+		*/
 		public int UpdateUserName(UserDetails selectedUser, out string message)
 		{
 			message = "";
 
 			SqlConnection conn = Connect();
 
-			string sqlQuery = "UPDATE [User] SET [Username] = @Username";
+			string sqlQuery = "UPDATE [User] SET [Username] = @Username WHERE [UserID] = @UserID";
 			SqlCommand cmd = new SqlCommand(sqlQuery, conn);
 
 			cmd.Parameters.AddWithValue("@Username", selectedUser.Username);
+			cmd.Parameters.AddWithValue("@UserID", selectedUser.User1ID);
 
 			try
 			{
@@ -233,6 +255,10 @@ namespace OthelloProject.Models
 			}
 		}
 
+		/*	Namn: UpdatePassword
+			Tar in en UserDetails som inparameter, denna innehåller ett nytt 
+			lösenord. Uppdaterar sedan lösenordet till rätt UserID.
+		*/
 		public int UpdatePassword(UserDetails selectedUser, out string message)
 		{
 			message = "";
@@ -243,10 +269,11 @@ namespace OthelloProject.Models
 
 			SqlConnection conn = Connect();
 
-			string sqlQuery = "UPDATE [User] SET [Password] = @Password";
+			string sqlQuery = "UPDATE [User] SET [Password] = @Password WHERE [UserID] = @UserID";
 			SqlCommand cmd = new SqlCommand(sqlQuery, conn);
 
 			cmd.Parameters.AddWithValue("@Password", selectedUser.Password);
+			cmd.Parameters.AddWithValue("@UserID", selectedUser.UserID);
 
 			try
 			{
@@ -270,16 +297,22 @@ namespace OthelloProject.Models
 				conn.Close();
 			}
 		}
+
+		/*	Namn: UpdatEmail
+			Tar in en UserDetails som inparameter, denna innehåller ett nytt 
+			Email. Uppdaterar sedan emailen till rätt UserID.
+		*/
 		public int UpdateEmail(UserDetails selectedUser, out string message)
 		{
 			message = "";
 
 			SqlConnection conn = Connect();
 
-			string sqlQuery = "UPDATE [User] SET [Email] = @Email";
+			string sqlQuery = "UPDATE [User] SET [Email] = @Email WHERE [UserID] = @UserID";
 			SqlCommand cmd = new SqlCommand(sqlQuery, conn);
 
 			cmd.Parameters.AddWithValue("@Email", selectedUser.Email);
+			cmd.Parameters.AddWithValue("@UserID", selectedUser.User1ID);
 
 			try
 			{
@@ -304,6 +337,13 @@ namespace OthelloProject.Models
 			}
 		}
 
+		/*	Namn: DeleteUser
+			Tar in en int i form av ett UserID och tar bort den raden från
+			User tabellen i databasen. Kör sedan en "Cleanup" där den kollar
+			igenom hela games tabellen och kollar efter games där varken
+			User1ID eller User2ID finnsi User tabellen och tar bort
+			dessa games.
+		*/
 		public int DeleteUser(int selectedUserID, out string message)
 		{
 			message = "";
@@ -350,6 +390,10 @@ namespace OthelloProject.Models
 			}
 		}
 
+		/*	Namn: GetUserByEmail
+			Tar in en sträng som är en email och hämtar sedan allt relaterat
+			till den användaren från databasen. Returneras i en UserDetails.
+		*/
 		public UserDetails? GetUserByEmail(string email, out string message)
 		{
 			message = "";
@@ -369,7 +413,6 @@ namespace OthelloProject.Models
 						UserID = (int)reader["UserID"],
 						Username = reader["Username"].ToString(),
 						Email = reader["Email"].ToString(),
-						Password = reader["Password"].ToString()
 					};
 				}
 				return null;
@@ -381,6 +424,10 @@ namespace OthelloProject.Models
 			}
 		}
 
+		/*	Namn: GetWinningStats
+			Tar in ett UserID och kollar igenom databasen och summerar antalet matcher
+			som en avnändare har vunnit och skickar tillbaka det till controllern.
+		*/
 		public int GetWinningStats(int userID, out int totalGames, out int gamesWon, out string message)
 		{
 			message = "";
@@ -412,6 +459,9 @@ namespace OthelloProject.Models
 			}
 		}
 
+		/*	Namn: UpdateUserProfile
+			Tar in användarinformation förutom lösenord och uppdaterar dessa i databasen
+		*/
 		public int UpdateUserProfile(int userId, string username, string email, out string message)
 		{
 			message = "";
@@ -436,6 +486,10 @@ namespace OthelloProject.Models
 			}
 		}
 
+		/*	Namn: UpdatePasswordById
+			Tar in ett UserID och ett o-hashat lösenord. Den hashar sedan lösernordet och
+			uppdaterar det gamla lösenordet i databasen med det nya.
+		*/
 		public int UpdatePasswordById(int userId, string rawPassword, out string message)
 		{
 			message = "";
