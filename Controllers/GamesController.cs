@@ -149,13 +149,13 @@ namespace OthelloProject
 			var user2Name = new UserMethods().GetUserInfoByID(initiatedGame.User2ID, out string msg2);
 
 			//Om användarnamnet inte är tomt sätt den i en sessionsvariabel
-			if (!string.IsNullOrEmpty(user1Name?.Username))
+			if (user1Name != null)
 			{
 				HttpContext.Session.SetString("User1Name", user1Name.Username);
 			}
 
 			//Om användarnamnet inte är tomt sätt den i en sessionsvariabel
-			if (!string.IsNullOrEmpty(user2Name.Username))
+			if (user2Name != null)
 			{
 				HttpContext.Session.SetString("User2Name", user2Name.Username);
 			}
