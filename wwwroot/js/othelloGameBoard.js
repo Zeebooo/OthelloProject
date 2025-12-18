@@ -11,4 +11,4 @@ function updateOthelloGameBoard() {
         })
         .catch(err => console.error(err));
 }
-setInterval(updateOthelloGameBoard, 1000);
+setInterval(updateOthelloGameBoard, 2000);

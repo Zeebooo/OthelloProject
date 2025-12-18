@@ -121,6 +121,7 @@ namespace OthelloProject.Models
 					gd.User1ID = (int)reader["User1ID"];
 					gd.GameStatus = reader["GameStatus"].ToString();
 					gd.Board = reader["Board"].ToString();
+					gd.GameName = reader["GameName"].ToString();
 					if (reader["User2ID"] != DBNull.Value)
 					{
 						gd.User2ID = (int)reader["User2ID"];

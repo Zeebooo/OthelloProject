@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.IO.Compression;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using OthelloProject.Models;
@@ -39,7 +40,6 @@ namespace OthelloProject
 		[ValidateAntiForgeryToken]
 		public IActionResult FinishedGame()
 		{
-			Console.WriteLine("hej");
 			HttpContext.Session.Remove("GameName");
 			HttpContext.Session.Remove("leftPlayer");
 			return RedirectToAction("Games", "Games");
@@ -56,7 +56,8 @@ namespace OthelloProject
 		[HttpPost]
 		public IActionResult AddGame(GameDetails newGame)
 		{
-			if (new GameMethods().GetGameByName(newGame.GameName, out string message1).GameName != null)
+			GameDetails gd = new GameMethods().GetGameByName(newGame.GameName, out string message1);
+			if (gd.GameName != null)
 			{
 				return View();
 			}
@@ -107,7 +108,6 @@ namespace OthelloProject
 
 			int currentPlayer = new GameMethods().GetCurrentPlayer(initiatedGame, out string msg3);
 			HttpContext.Session.SetInt32("CurrentPlayer", currentPlayer);
-			List<(int row, int col)> validMoves = new OthelloLogic().GetValidMoves(initiatedGame, currentPlayer);
 
 			string boardString = initiatedGame.Board;
 			int[,] boardArray = new ConverterMethods().ConvertBoardStringToArray(boardString);
@@ -135,12 +135,9 @@ namespace OthelloProject
 			HttpContext.Session.SetInt32("Player2Points", player2Points);
 			HttpContext.Session.SetInt32("Player1Points", player1Points);
 
-			if (initiatedGame.WinnerID != null)
-			{
-				Console.WriteLine("OMG");
-				HttpContext.Session.SetInt32("leftPlayer", initiatedGame.WinnerID ?? 0);
-				return PartialView("OthelloGameBoard", boardArray);
-			}
+
+
+			List<(int row, int col)> validMoves = new OthelloLogic().GetValidMoves(initiatedGame, currentPlayer);
 
 			if (validMoves.IsNullOrEmpty())
 			{
@@ -165,6 +162,12 @@ namespace OthelloProject
 				return PartialView("OthelloGameBoard", boardArray);
 			}
 
+			if (initiatedGame.WinnerID != null)
+			{
+				Console.WriteLine("Winner: " + initiatedGame.WinnerID);
+				HttpContext.Session.SetInt32("leftPlayer", initiatedGame.WinnerID ?? 0);
+				return PartialView("OthelloGameBoard", boardArray);
+			}
 
 
 			return PartialView("OthelloGameBoard", boardArray);
@@ -250,7 +253,6 @@ namespace OthelloProject
 
 			if (success == false)
 			{
-				Console.WriteLine("d funka inte");
 				return RedirectToAction("OthelloBoard");
 			}
 			else if (success == true)
