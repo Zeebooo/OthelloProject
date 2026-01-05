@@ -14,6 +14,10 @@ namespace OthelloProject.Controllers
 {
 	public class UserController : Controller
 	{
+
+		/*
+		  Get metod för att visa registreringssidan.
+		*/
 		[AllowAnonymous]
 		[HttpGet]
 		public IActionResult RegisterUser()
@@ -21,15 +25,20 @@ namespace OthelloProject.Controllers
 			return View("Register");
 		}
 
+		/*
+		  Post metod för att registrera en användare.
+		*/
+
 		[AllowAnonymous]
 		[HttpPost]
 		public IActionResult RegisterUser(UserDetails userDetail)
 		{
-
+			
+			//Anropar InsertUser metoden från UserMethods klassen för att registrera användaren. 
 			UserMethods userMethods = new UserMethods();
-
 			int i = userMethods.InsertUser(userDetail, out string message);
 
+			//Switch sats för att hantera olika resultat från InsertUser metoden.
 			switch (i)
 			{
 				case -2:
@@ -47,6 +56,9 @@ namespace OthelloProject.Controllers
 			}
 		}
 
+		/*
+		  Get metod för att visa inloggningssidan.
+		*/
 		[AllowAnonymous]
 		[HttpGet]
 		public IActionResult Login()
@@ -54,14 +66,20 @@ namespace OthelloProject.Controllers
 			return View("LoginPage");
 		}
 
+		/*
+		  Post metod för att logga in en användare.
+		*/
 		[AllowAnonymous]
 		[HttpPost]
 		public IActionResult Login(UserDetails ud)
 		{
+			//Hämtar användaren med angivet användarnamn.
 			UserDetails? retrievedUser = new UserMethods().VerifyLogin(ud.Username!, out string errormsg);
 
+			//Om användaren finns, verifiera lösenordet.
 			if (retrievedUser != null)
 			{
+				//Skapar en instans av PasswordHasher för att verifiera lösenordet.
 				var passwordHasher = new PasswordHasher<UserDetails>();
 				var verificationResult = passwordHasher.VerifyHashedPassword(retrievedUser, retrievedUser.Password, ud.Password);
 
@@ -86,6 +104,9 @@ namespace OthelloProject.Controllers
 			}
 		}
 
+		/*
+		  Get metod för att visa sidan för glömt lösenord.
+		*/	
 		[AllowAnonymous]
 		[HttpGet]
 		public IActionResult ForgotPassword()
@@ -93,6 +114,9 @@ namespace OthelloProject.Controllers
 			return View(new ForgotPasswordViewModel());
 		}
 
+		/*
+		  Post metod för att hantera glömt lösenord.
+		*/
 		[AllowAnonymous]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
@@ -176,15 +200,20 @@ namespace OthelloProject.Controllers
 			}
 		}
 
+		/*
+		  Get metod för att visa användarens sida med statistik.
+		*/
 		[HttpGet]
 		public IActionResult UserPage()
 		{
+			// Hämtar användarens ID från sessionsvariabel. och returnerar vyn.
 			int? userId = HttpContext.Session.GetInt32("UserID");
 			if (userId == null)
 			{
 				return RedirectToAction("Login");
 			}
 
+			//Hämtar användarens information och returnerar vyn
 			var um = new UserMethods();
 			var gm = new GameMethods();
 			var user = um.GetUserInfoByID(userId, out string userMsg);
@@ -194,10 +223,13 @@ namespace OthelloProject.Controllers
 				return View("UserPage");
 			}
 
+			
 			int totalGames, gamesWon;
+			//Resultat från GetWinningStats metoden. 1 om den lyckas noll om den misslyckas.
 			int result = um.GetWinningStats(userId.Value, out totalGames, out gamesWon, out string statsMsg);
 			int gamesLost = totalGames - gamesWon;
 
+			//Om resultatet inte är 1 visa felmeddelande.
 			if (result != 1)
 			{
 				ViewBag.Error = statsMsg;
@@ -218,12 +250,18 @@ namespace OthelloProject.Controllers
 			return View("UserPage");
 		}
 
+		/*
+		  Get metod för att visa profil.
+		*/
+
 		[HttpGet]
 		public IActionResult Profile()
 		{
+			//Hämta användarens ID från sessionsvariabel.
 			int? userId = HttpContext.Session.GetInt32("UserID");
 			if (userId == null) return RedirectToAction("Login");
 
+			//Hämta användarens information och skapa ViewModel.
 			var um = new UserMethods();
 			var user = um.GetUserInfoByID(userId, out string msg);
 			if (user == null) { ViewBag.Error = msg; return View(new ProfileViewModel()); }
@@ -232,10 +270,14 @@ namespace OthelloProject.Controllers
 			return View(vm);
 		}
 
+		/*
+		  Post metod för att uppdatera profil.
+		*/
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public IActionResult Profile(ProfileViewModel vm)
 		{
+			//Hämta användarens ID från sessionsvariabel.
 			int? userId = HttpContext.Session.GetInt32("UserID");
 			if (userId == null) return RedirectToAction("Login");
 
