@@ -160,11 +160,15 @@ namespace OthelloProject.Controllers
 			return RedirectToAction("ForgotPassword");
 		}
 
+		/*
+			Hjälpmetod för att skicka temporärt lösenord via e-post.
+		*/
 		private bool SendTempPassword(string toEmail, string username, string tempPassword, out string error)
 		{
 			error = "";
 			try
 			{
+				// Läs SMTP-inställningar från appsettings.json.
 				var config = new ConfigurationBuilder()
 					.SetBasePath(Directory.GetCurrentDirectory())
 					.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -176,14 +180,17 @@ namespace OthelloProject.Controllers
 				var pass = config["Smtp:Pass"];
 				var from = config["Smtp:From"];
 
+				// Grundläggande validering av konfig.
 				if (string.IsNullOrWhiteSpace(host) || string.IsNullOrWhiteSpace(portStr) || string.IsNullOrWhiteSpace(from))
 				{
 					error = "SMTP-konfiguration saknas.";
 					return false;
 				}
 
+				// Säker fallback om port saknas/är ogiltig.
 				int port = int.TryParse(portStr, out var p) ? p : 25;
 
+				// Skapa SMTP-klient med ev. autentisering.
 				using var client = new SmtpClient(host, port)
 				{
 					EnableSsl = true,
@@ -192,6 +199,7 @@ namespace OthelloProject.Controllers
 						: CredentialCache.DefaultNetworkCredentials
 				};
 
+				// Bygg och skicka mailet med temporärt lösenord.
 				using var mail = new MailMessage(from, toEmail);
 				mail.Subject = "Temporärt lösenord";
 				mail.Body = $"Hej {username},\n\nDitt temporära lösenord är: {tempPassword}\n\nLogga in och byt lösenord snarast.";
