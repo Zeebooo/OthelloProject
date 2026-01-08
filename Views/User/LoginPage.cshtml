@@ -5,9 +5,11 @@
     ViewData["Title"] = "Login";
 }
 
+@* Login form with registration and password recovery links. *@
 <div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
     <div class="col-md-6">
 
+        @* Show status messages from the login flow. *@
         @if (!string.IsNullOrWhiteSpace(ViewBag.Message as string))
         {
             <div class="alert alert-info" role="alert">

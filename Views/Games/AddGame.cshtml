@@ -3,11 +3,14 @@
 @using System.Diagnostics.Eventing.Reader
 @model GameDetails
 
+@* Simple form to create a new game with default status and user context. *@
+
 <form asp-controller="Games" asp-action="AddGame" method="post" class="othello-form">
 	<div class="othello-form-group">
 		<label class="othello-label" asp-for="GameName">Enter name for the game: </label>
 		<input class="othello-input" required asp-for="GameName" />
 	</div>
+	@* Hidden fields provide status and user ID for server-side creation. *@
 	<input type="hidden" asp-for="GameStatus" value="Waiting"/>
 	<input type="hidden" asp-for="User1ID" value="@ViewBag.User1ID"/>
 	<div class="d-flex gap-2">

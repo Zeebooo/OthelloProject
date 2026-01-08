@@ -2,6 +2,7 @@
     ViewData["Title"] = "Register user";
 }
 
+@* Informational feedback from the registration flow. *@
 @if (!string.IsNullOrWhiteSpace(ViewBag.Message as string))
 {
     <div class="alert alert-info" role="alert">
@@ -9,6 +10,7 @@
     </div>
 }
 
+@* Registration form for a new user account. *@
 <div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
 	<div class="col-md-6">
 

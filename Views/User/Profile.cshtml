@@ -4,10 +4,12 @@
     ViewData["Title"] = "Profile";
 }
 
+@* Profile edit form with feedback messages. *@
 <div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
     <div class="othello-form fra-border" style="max-width: 520px !important;">
         <h3 class="mb-3">Profile</h3>
 
+        @* Show success or error feedback after submit. *@
         @if (!string.IsNullOrWhiteSpace(TempData["ProfileMessage"] as string))
         {
             <div class="alert alert-success">@TempData["ProfileMessage"]</div>
@@ -51,6 +53,10 @@
                 <a asp-controller="Games" asp-action="Games" class="othello-btn-back">Back</a>
             </div>
         </form>
+        @* Separate action to delete the user account. *@
+        <form asp-controller="User" asp-action="DeleteUser" class="othello-leave-form">
+			<button type="submit" class="othello-leave-btn">Delete User</button>
+		</form>
     </div>
 </div>
 

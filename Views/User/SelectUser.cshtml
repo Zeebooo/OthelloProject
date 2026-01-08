@@ -3,8 +3,10 @@
     var users = Model?.Users as System.Collections.Generic.IEnumerable<dynamic>;
 }
 
+@* Admin-style view for listing registered users. *@
 <h2 class="mb-4">Registrerade användare</h2>
 
+@* Status message from user actions (create/delete/etc). *@
 @if (!string.IsNullOrWhiteSpace(ViewBag.Message as string))
 {
     <div class="alert alert-info" role="alert">
@@ -14,6 +16,7 @@
 
 @if (users != null)
 {
+    @* Table of user records retrieved from the backend. *@
     <table class="table table-striped">
         <thead>
             <tr>
@@ -36,9 +39,11 @@
 }
 else
 {
+    @* Fallback when no users could be loaded. *@
     <div class="alert alert-warning" role="alert">
         Inga användare kunde hämtas.
     </div>
 }
 
+@* Link to the registration form. *@
 <a class="othello-btn mt-3" asp-action="RegisterUser">Registrera ny användare</a>

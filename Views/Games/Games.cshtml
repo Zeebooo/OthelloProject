@@ -7,12 +7,14 @@
 	ViewData["Title"] = "Inloggad";
 }
 
+@* Main entry view for browsing, searching, and creating games. *@
 <div class="othello-form fra-border" style="max-width: 760px !important">
 	<div class="mb-3 text-center">
 		<h1 class="display-6 mb-2">Available games</h1>
 		<p class="mb-0 text-muted">Create a new game or join an existing one.</p>
 	</div>
 
+	@* Show empty state or the searchable list based on model content. *@
 	@if (Model.IsNullOrEmpty())
 	{
 		<h5 class="text-center">@ViewBag.NoGames</h5>
@@ -22,6 +24,7 @@
 	}
 	else
 	{
+		@* Search bar and sort toggle for available games. *@
 		<div class="d-flex flex-nowrap justify-content-between align-items-center gap-3 mb-4 mt-5">
 			<form method="get" asp-action="Games" asp-controller="Games"
 				class="d-flex flex-nowrap gap-2 justify-content-start align-items-center mb-0 flex-grow-1">
@@ -50,13 +53,14 @@
 		</div>
 
 		<div id="gameListContainer">
+			@* Partial keeps list rendering reusable for updates via JS. *@
 			@await Html.PartialAsync("GameList", Model)
 		</div>
 	}
 </div>
 @section Scripts {
 	<script>
-		// Razor skriver ut värdet direkt till JS
+		// Razor prints the server-side boolean directly into JS.
 		const sorted = @((ViewBag.Sorted ?? false).ToString().ToLower());
 	</script>
 	<script src="~/js/gameList.js"></script>

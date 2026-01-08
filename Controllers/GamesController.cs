@@ -365,31 +365,41 @@ namespace OthelloProject
 			return RedirectToAction("Games");
 		}
 
+		/*
+			Gör ett drag på spelbrädet och byter nuvarande spelare om draget var giltigt
+		*/
 		[HttpPost]
 		public IActionResult makeMove(int row, int col, int currentplayer)
 		{
+			//Skapar instanser av GameMethods och OthelloLogic.
 			GameMethods gm = new GameMethods();
 			OthelloLogic gameLogic = new OthelloLogic();
-
+			
+			//Hämtar nuvarande spelet via sessionsvariabel.
 			string currentGame = HttpContext.Session.GetString("GameName") ?? "";
 			GameDetails gd = gm.GetGameByName(currentGame, out string message1);
 
+			//Hämtar nuvarande spelbrädet och konverterar det till en int array.
 			string currentBoard = gm.GetBoard(gd, out string message2);
 			int[,] newBoard = new ConverterMethods().ConvertBoardStringToArray(currentBoard);
 
+			//Anropar BoardState funktionen för att göra draget.
 			bool success = gameLogic.BoardState(row, col, currentplayer, newBoard, gd);
 
+			//Om draget inte var giltigt returnera till spelbrädet.
 			if (success == false)
 			{
 				return RedirectToAction("OthelloBoard");
 			}
-			else if (success == true)
+			else if (success == true) 
 			{
+				//Om draget var giltigt och nuvarande spelare är 1 byt nuvrande spelare till 2.
 				if (currentplayer == 1)
 				{
 					gd.CurrentPlayer = 2;
 					gm.UpdateCurrentPlayer(gd, out string message3);
 				}
+				//Annars om nuvarande spelare 2 byt nuvarande spelare till 1.
 				else if (currentplayer == 2)
 				{
 					gd.CurrentPlayer = 1;

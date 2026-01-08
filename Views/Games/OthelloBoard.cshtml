@@ -1,10 +1,11 @@
 @model int[,]
 
-
+@* Container for the live board partial and its client-side script. *@
 <div class="othello-form othello-board-card fra-border" id="othelloGameBoardContainer" >
 	@await Html.PartialAsync(partialViewName: "OthelloGameBoard", Model)
 </div>
 
 @section Scripts{
+	@* Board interactions and polling live here. *@
 	<script src="~/js/othelloGameBoard.js"></script>
 }

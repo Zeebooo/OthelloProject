@@ -1,4 +1,5 @@
 @{
+	@* Compute win-rate helpers for the stats display. *@
 	var winRate = ViewBag.TotalGames > 0 ? (double)ViewBag.GamesWon / (double)ViewBag.TotalGames : (double?)null;
 	var pct = winRate.HasValue ? (int)(winRate.Value * 100) : 0;
 	var wrClass = "wr-na";
@@ -12,9 +13,11 @@
 
 @using OthelloProject.Models.Methods
 @{
+	@* Recent games are provided via the view bag. *@
 	var recentGames = ViewBag.RecentGames as IEnumerable<RecentGame>;
 }
 
+@* User stats summary with recent game outcomes. *@
 <div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
 	<div class="othello-form fra-border" style="max-width: 520px !important;">
 		<div class="mb-4 text-center">
@@ -48,6 +51,7 @@
 			<div class="d-flex justify-content-between align-items-center mb-2">
 				<span class="user-stats-label">Recent games</span>
 			</div>
+			@* Render recent results when available, otherwise show a placeholder. *@
 			@if (recentGames != null && recentGames.Any())
 			{
 				<div class="recent-list">

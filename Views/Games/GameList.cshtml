@@ -1,6 +1,7 @@
 @using OthelloProject.Models.Methods
 @model List<GameDetails>
 
+@* Render the list of available games with join actions based on status. *@
 <table class="othello-table mb-3">
 	<tr>
 		<th class="othello-label text-center">Game</th>
@@ -11,11 +12,13 @@
 	@foreach (GameDetails availableGames in Model)
 	{
 		<tr class="othello-input">
+			@* Hide finished games from the list. *@
 			@if (availableGames.GameStatus != "Finished")
 			{
 				<td class="text-center">@availableGames.GameName</td>
 				<td class="text-center">@availableGames.GameStatus</td>
 				<td class="text-center" style="white-space: nowrap;">
+					@* Only allow joining if the game is waiting for players. *@
 					@if (availableGames.GameStatus == "Waiting")
 					{
 						<a type="submit" class="othello-nav-link" asp-controller="Games" asp-action="JoinGame"

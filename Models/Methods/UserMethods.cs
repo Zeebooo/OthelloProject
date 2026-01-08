@@ -516,6 +516,51 @@ namespace OthelloProject.Models
 				return 0;
 			}
 		}
+		/*	Namn: DeleteUserById
+			Tar in ett UserID och tar bort användaren från databasen.
+			Använder en transaktion för att se till att både
+			användaren och spelet tas bort.
+		*/
 
+		public int DeleteUserById(int userId, out string message)
+		{
+			message = "";
+			using SqlConnection conn = Connect();
+			string sql = @"BEGIN TRANSACTION;
+
+							BEGIN TRY
+
+							DELETE FROM [Game]
+							WHERE User1ID = @UserID OR User2ID = @UserID;
+
+							DELETE FROM [User]
+							WHERE UserID = @UserID;
+
+							COMMIT TRANSACTION;
+							END TRY
+							BEGIN CATCH
+								ROLLBACK TRANSACTION;
+								THROW;
+							END CATCH;";
+
+			using SqlCommand cmd = new SqlCommand(sql, conn);
+			cmd.Parameters.AddWithValue("@UserID", userId);
+
+			try
+			{
+				conn.Open();
+				Console.WriteLine($"DB={conn.Database}, Server={conn.DataSource}");
+				int rows = cmd.ExecuteNonQuery();
+				if (rows != 1) message = "Ingen rad raderades.";
+				Console.WriteLine("int rows: " + rows);
+				return rows;
+			}
+			catch (Exception ex)
+			{
+				message = ex.Message;
+				Console.WriteLine("DELETE EXCEPTION: " + ex);
+				return 0;
+			}
+		}
 	}
 }
