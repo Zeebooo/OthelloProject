@@ -549,10 +549,8 @@ namespace OthelloProject.Models
 			try
 			{
 				conn.Open();
-				Console.WriteLine($"DB={conn.Database}, Server={conn.DataSource}");
 				int rows = cmd.ExecuteNonQuery();
 				if (rows != 1) message = "Ingen rad raderades.";
-				Console.WriteLine("int rows: " + rows);
 				return rows;
 			}
 			catch (Exception ex)
