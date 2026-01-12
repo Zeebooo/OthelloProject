@@ -336,7 +336,7 @@ namespace OthelloProject.Controllers
 			var um = new UserMethods();
 			int rows = um.DeleteUserById(userID.Value, out string msg);
 
-			if (rows != 1)
+			if (rows == 0)
 			{
 				Console.WriteLine("Ingen användare raderades: " + userID);
 				return RedirectToAction("Profile");
